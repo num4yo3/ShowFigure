@@ -1,10 +1,16 @@
-import { Plot } from "./Plot";
+import { Plot, SetHAxis } from "./Plot";
 import styled from "styled-components";
 
 type position = {
   x: number;
   y: number;
 };
+
+type params = {
+  pos: position;
+  posR: position;
+};
+
 type range = {
   xMin: number;
   xMax: number;
@@ -26,9 +32,12 @@ const setScaleAuto = (poslist: position[]) => {
 const AdjustPos = (data: position[], range: range) => {
   const xWidth: number = range.xMax - range.xMin;
   const yWidth: number = range.yMax - range.yMin;
-  const modData: position[] = data.map((item) => ({
-    x: (item.x - range.xMin) / xWidth,
-    y: (item.y - range.yMin) / yWidth
+  const modData: params[] = data.map((item) => ({
+    pos: item,
+    posR: {
+      x: (item.x - range.xMin) / xWidth,
+      y: (item.y - range.yMin) / yWidth
+    }
   }));
   return modData;
 };
@@ -78,8 +87,8 @@ export const FigureContents = () => {
     { x: 9, y: 81 }
   ];
   const range: range = setScaleAuto(data);
-  const modData: position[] = AdjustPos(data, range);
-
+  const modData: params[] = AdjustPos(data, range);
+  console.log(modData);
   return (
     <Wrapper>
       <VAxis />
@@ -87,7 +96,9 @@ export const FigureContents = () => {
         <Plot data={[...modData]} />
       </PlotBox>
       <Space />
-      <HAxis />
+      <HAxis>
+        <SetHAxis data={[...modData]} />
+      </HAxis>
     </Wrapper>
   );
 };

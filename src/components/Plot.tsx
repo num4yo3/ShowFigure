@@ -4,6 +4,10 @@ type position = {
   x: number;
   y: number;
 };
+type params = {
+  pos: position;
+  posR: position;
+};
 
 const Scatter = styled.div`
   position: absolute;
@@ -18,7 +22,7 @@ const Scatter = styled.div`
 `;
 
 export const Plot = (props) => {
-  const data: position[] = props.data;
+  const data: params[] = props.data;
   return (
     <div
       style={{
@@ -29,7 +33,7 @@ export const Plot = (props) => {
       }}
     >
       {data.map((item, index) => (
-        <Scatter key={index} pos={{ ...item }} />
+        <Scatter key={index} pos={{ ...item.posR }} />
       ))}
     </div>
   );
