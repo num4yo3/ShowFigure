@@ -73,22 +73,13 @@ const HAxis = styled.div`
   background-color: rgb(240, 240, 240);
 `;
 
-export const FigureContents = () => {
-  const data: position[] = [
-    { x: 0, y: 0 },
-    { x: 1, y: 1 },
-    { x: 2, y: 4 },
-    { x: 3, y: 9 },
-    { x: 4, y: 16 },
-    { x: 5, y: 25 },
-    { x: 6, y: 36 },
-    { x: 7, y: 49 },
-    { x: 8, y: 64 },
-    { x: 9, y: 81 }
-  ];
+export const FigureContents = (props: {
+  data: position[];
+  setAxisX: { init: number; interval: number };
+}) => {
+  const { data, setAxisX } = props;
   const range: range = setScaleAuto(data);
   const modData: params[] = AdjustPos(data, range);
-  console.log(modData);
   return (
     <Wrapper>
       <VAxis />
@@ -97,7 +88,7 @@ export const FigureContents = () => {
       </PlotBox>
       <Space />
       <HAxis>
-        <SetHAxis data={[...modData]} />
+        <SetHAxis data={[...modData]} setAxis={setAxisX} />
       </HAxis>
     </Wrapper>
   );
