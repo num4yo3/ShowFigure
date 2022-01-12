@@ -1,5 +1,5 @@
 import { FigureBox } from "./components/FigureBox";
-import { PlotArea } from "./components/PlotArea";
+import { FigureContents } from "./components/FigureContents";
 import { Label, VLabel } from "./components/Axis";
 
 export default function App() {
@@ -8,10 +8,7 @@ export default function App() {
   return (
     <>
       <FigureBox>
-        <PlotArea>
-          <VLabel scale={scale} />
-          <Label scale={scale} />
-        </PlotArea>
+        <FigureContents />
       </FigureBox>
     </>
   );

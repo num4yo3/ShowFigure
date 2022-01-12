@@ -4,7 +4,7 @@ const Scatter = styled.div`
   position: absolute;
   left: ${(props) => props.pos.x * 100 + "%"};
   bottom: ${(props) => props.pos.y * 100 + "%"};
-  width: 6px;
+  width: 69x;
   height: 6px;
   border-radius: 3px;
   background-color: rgb(255, 255, 255);
