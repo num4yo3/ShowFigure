@@ -1,4 +1,5 @@
-import { Plot, SetHAxis } from "./Plot";
+import { ScatterPlot } from "./Plot";
+import { SetHAxis } from "./Axis";
 import styled from "styled-components";
 
 type position = {
@@ -84,7 +85,7 @@ export const FigureContents = (props: {
     <Wrapper>
       <VAxis />
       <PlotBox>
-        <Plot data={[...modData]} />
+        <ScatterPlot data={[...modData]} />
       </PlotBox>
       <Space />
       <HAxis>

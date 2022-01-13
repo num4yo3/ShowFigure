@@ -1,52 +1,46 @@
-type Props = {
-  scale: number[];
+import styled from "styled-components";
+
+type position = {
+  x: number;
+  y: number;
 };
 
-export const Label: React.FC<Props> = (props) => {
-  const defaultStyle = {
-    flex: "1 1 100%",
-    textAlign: "center"
-  };
+type params = {
+  pos: position;
+  posR: position;
+};
+
+type setAxis = {
+  init: number;
+  interval: number;
+};
+
+const HScale = styled.div`
+  position: absolute;
+  left: ${(props) => props.pos.x * 100 + "%"};
+  top: 0;
+  width: 4rem;
+  text-align: center;
+  /* outline: solid 1px; */
+  transform: translateX(-2rem) translateY(0.5rem);
+`;
+
+const makeHorizontalAxis = (props: { data: params[]; setAxis: setAxis }) => {
+  const { data, setAxis } = props;
+  return data.filter((item) => {
+    return (item.pos.x + setAxis.init) % setAxis.interval === 0;
+  });
+};
+
+export const SetHAxis = (props: { data: params[]; setAxis: setAxis }) => {
+  const scale = makeHorizontalAxis(props);
   return (
-    <>
-      <div style={{ display: "flex" }}>
-        {props.scale.map((value, index) => (
-          <div key={index} style={{ ...defaultStyle }}>
-            {value}
-          </div>
-        ))}
-      </div>
-    </>
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
+      {scale.map((item, index) => (
+        <HScale key={index} pos={{ ...item.posR }}>
+          {item.pos.x}
+        </HScale>
+      ))}
+    </div>
   );
-};
-
-export const VLabel: React.FC<Props> = (props) => {
-  const defaultStyle = {
-    flex: "1 1 100%",
-    alignItems: "center",
-    width: "100%",
-    textAlign: "center"
-  };
-  return (
-    <>
-      <div
-        style={{
-          display: "flex",
-          height: "100%",
-          flexDirection: "column-reverse",
-          justifyContent: "center"
-        }}
-      >
-        {props.scale.map((value, index) => (
-          <div key={index} style={{ ...defaultStyle }}>
-            {value}
-          </div>
-        ))}
-      </div>
-    </>
-  );
-};
-
-export const Scale = (props) => {
-  return <div></div>;
 };
