@@ -1,5 +1,5 @@
 import { ScatterPlot } from "./Plot";
-import { SetHAxis } from "./Axis";
+import { SetHAxis, SetVAxis } from "./Axis";
 import styled from "styled-components";
 
 type position = {
@@ -8,8 +8,8 @@ type position = {
 };
 
 type params = {
-  pos: position;
-  posR: position;
+  pos: position /* 生データ */;
+  posR: position /* 窓上での相対座標*/;
 };
 
 type range = {
@@ -19,7 +19,8 @@ type range = {
   yMax: number;
 };
 
-const setScaleAuto = (poslist: position[]) => {
+// データの最小値, 最大値を返す
+const pickDataRange = (poslist: position[]) => {
   const posx: number[] = poslist.map((value) => value.x);
   const posy: number[] = poslist.map((value) => value.y);
   return {
@@ -30,7 +31,8 @@ const setScaleAuto = (poslist: position[]) => {
   };
 };
 
-const AdjustPos = (data: position[], range: range) => {
+// データ座標からプロット窓上での相対位置を計算
+const AddPosR = (data: position[], range: range) => {
   const xWidth: number = range.xMax - range.xMin;
   const yWidth: number = range.yMax - range.yMin;
   const modData: params[] = data.map((item) => ({
@@ -76,20 +78,24 @@ const HAxis = styled.div`
 
 export const FigureContents = (props: {
   data: position[];
-  setAxisX: { init: number; interval: number };
+  range?: range;
+  setAxisX?: { init: number; interval: number };
 }) => {
-  const { data, setAxisX } = props;
-  const range: range = setScaleAuto(data);
-  const modData: params[] = AdjustPos(data, range);
+  const { data } = props;
+  // プロットする範囲をrangeで指定
+  const range: range = props.range || pickDataRange(data);
+  const modData: params[] = AddPosR(data, range);
   return (
     <Wrapper>
-      <VAxis />
+      <VAxis>
+        <SetVAxis />
+      </VAxis>
       <PlotBox>
         <ScatterPlot data={[...modData]} />
       </PlotBox>
       <Space />
       <HAxis>
-        <SetHAxis data={[...modData]} setAxis={setAxisX} />
+        <SetHAxis />
       </HAxis>
     </Wrapper>
   );

@@ -12,14 +12,18 @@ export default function App() {
     { x: 6, y: 36 },
     { x: 7, y: 30 },
     { x: 8, y: 44 },
-    { x: 9, y: 81 }
+    { x: 9, y: 81 },
+    { x: 10, y: 71 },
+    { x: 11, y: 55 }
   ];
-  const setAxisX = { init: 0, interval: 1 };
 
   return (
     <>
       <FigureBox>
-        <FigureContents data={[...data]} setAxisX={{ ...setAxisX }} />
+        <FigureContents
+          data={[...data]}
+          range={{ xMin: 0, xMax: 15, yMin: 0, yMax: 100 }}
+        />
       </FigureBox>
     </>
   );
