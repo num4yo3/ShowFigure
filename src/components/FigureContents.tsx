@@ -1,5 +1,5 @@
 import { ScatterPlot } from "./Plot";
-import { SetHAxis, SetVAxis } from "./Axis";
+import { SetAxis } from "./Axis";
 import styled from "styled-components";
 
 type position = {
@@ -88,14 +88,20 @@ export const FigureContents = (props: {
   return (
     <Wrapper>
       <VAxis>
-        <SetVAxis />
+        <SetAxis
+          set={{ min: range.yMin, max: range.yMax, interval: 10 }}
+          direction="v"
+        />
       </VAxis>
       <PlotBox>
         <ScatterPlot data={[...modData]} />
       </PlotBox>
       <Space />
       <HAxis>
-        <SetHAxis />
+        <SetAxis
+          set={{ min: range.xMin, max: range.xMax, interval: 10 }}
+          direction="h"
+        />
       </HAxis>
     </Wrapper>
   );

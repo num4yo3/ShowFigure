@@ -52,39 +52,37 @@ export const VerticalTick = (props: { data: axisData }) => {
   const defstyle = {
     position: "absolute",
     display: "flex",
+    justifyContent: "flex-end",
     alignItems: "center",
     left: "0",
     top: (1 - data.posR) * 100 + "%",
+    width: "3rem",
     height: "1rem",
-    transform: "translateX(0rem) translateY(-0.5rem)"
+    transform: "translateX(-1.5rem) translateY(-0.5rem)"
   };
   return <div style={{ ...defstyle }}>{data.value}</div>;
 };
 
-export const SetHAxis = () => {
-  const axis: axisData[] = makeTickList({ min: 27, max: 110, interval: 10 });
-  return (
-    <div style={{ position: "relative", width: "100%", height: "100%" }}>
-      {axis.map((item, index) => (
-        <HorizontalTick key={index} data={item} />
-      ))}
-    </div>
-  );
-};
-
-export const SetVAxis = () => {
-  const axis: axisData[] = makeTickList({ min: 0, max: 90, interval: 10 });
-  return (
-    <div
-      style={{
-        position: "relative",
-        width: "100%",
-        height: "100%"
-      }}
-    >
-      {axis.map((item, index) => (
-        <VerticalTick key={index} data={item} />
-      ))}
-    </div>
-  );
+export const SetAxis = (props: { set: axisSetter; direction: string }) => {
+  const { set, direction } = props;
+  const axis: axisData[] = makeTickList(set);
+  if (direction === "h") {
+    return (
+      <div style={{ position: "relative", width: "100%", height: "100%" }}>
+        {axis.map((item, index) => (
+          <HorizontalTick key={index} data={item} />
+        ))}
+      </div>
+    );
+  } else if (direction === "v") {
+    return (
+      <div style={{ position: "relative", width: "100%", height: "100%" }}>
+        {axis.map((item, index) => (
+          <VerticalTick key={index} data={item} />
+        ))}
+      </div>
+    );
+  } else {
+    return <div></div>;
+  }
 };

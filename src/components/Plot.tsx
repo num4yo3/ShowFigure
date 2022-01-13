@@ -32,7 +32,8 @@ export const ScatterPlot = (props: { data: params[] }) => {
         position: "relative",
         width: "100%",
         height: "100%",
-        outline: "solid 1px rgb(100,100,100)"
+        outline: "solid 1px rgb(100,100,100)",
+        overflow: "hidden"
       }}
     >
       {data.map((item, index) => (
