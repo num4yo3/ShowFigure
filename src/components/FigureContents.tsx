@@ -1,5 +1,5 @@
 import { ScatterPlot } from "./Plot";
-import { SetAxis } from "./Axis";
+import { SetAxis, SetGuide, makeTickList } from "./Axis";
 import styled from "styled-components";
 
 type position = {
@@ -19,6 +19,30 @@ type range = {
   yMax: number;
 };
 
+type axisData = {
+  value: string;
+  posR: number;
+};
+
+const pickDataFromRange = (
+  poslist: position[],
+  range?: { xMin?: number; xMax?: number; yMin?: number; yMax?: number }
+) => {
+  let list: position[] = poslist;
+  if (range.xMin !== undefined) {
+    list = list.filter((pos) => pos.x >= range.xMin);
+  }
+  if (range.xMax !== undefined) {
+    list = list.filter((pos) => pos.x <= range.xMax);
+  }
+  if (range.yMin !== undefined) {
+    list = list.filter((pos) => pos.y >= range.yMin);
+  }
+  if (range.yMax !== undefined) {
+    list = list.filter((pos) => pos.y <= range.yMax);
+  }
+  return list;
+};
 // データの最小値, 最大値を返す
 const pickDataRange = (poslist: position[]) => {
   const posx: number[] = poslist.map((value) => value.x);
@@ -48,7 +72,7 @@ const AddPosR = (data: position[], range: range) => {
 const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  width: 95%;
+  width: 90%;
   height: 80%;
   background-color: rgb(255, 255, 255);
 `;
@@ -56,52 +80,62 @@ const Wrapper = styled.div`
 const VAxis = styled.div`
   width: 5%;
   height: 90%;
-  background-color: rgb(240, 240, 240);
-`;
-
-const PlotBox = styled.div`
-  width: 95%;
-  height: 90%;
-`;
-
-const Space = styled.div`
-  width: 5%;
-  height: 10%;
-  background-color: rgb(240, 240, 240);
+  /* background-color: rgb(240, 240, 240); */
 `;
 
 const HAxis = styled.div`
   width: 95%;
   height: 10%;
-  background-color: rgb(240, 240, 240);
+  /* background-color: rgb(240, 240, 240); */
+`;
+
+const PlotBox = styled.div`
+  position: relative;
+  width: 95%;
+  height: 90%;
+  outline: solid 1px rgb(0, 0, 0);
+`;
+
+const Space = styled.div`
+  width: 5%;
+  height: 10%;
+  /* background-color: rgb(240, 240, 240); */
 `;
 
 export const FigureContents = (props: {
   data: position[];
-  range?: range;
+  range?: { xMin?: number; xMax?: number; yMin?: number; yMax?: number };
+  xtick?: number;
+  ytick?: number;
   setAxisX?: { init: number; interval: number };
 }) => {
-  const { data } = props;
+  const data = pickDataFromRange(props.data, props.range);
+  const xtick = props.xtick || 1;
+  const ytick = props.ytick || 1;
   // プロットする範囲をrangeで指定
-  const range: range = props.range || pickDataRange(data);
+  const dataRange: range = pickDataRange(data);
+  const range: range = { ...dataRange, ...props.range };
+  //表示位置を取得
   const modData: params[] = AddPosR(data, range);
+
+  const xAxis = { min: range.xMin, max: range.xMax, interval: xtick };
+  const yAxis = { min: range.yMin, max: range.yMax, interval: ytick };
+  const tickListX: axisData[] = makeTickList(xAxis);
+  const tickListY: axisData[] = makeTickList(yAxis);
+
   return (
     <Wrapper>
       <VAxis>
-        <SetAxis
-          set={{ min: range.yMin, max: range.yMax, interval: 10 }}
-          direction="v"
-        />
+        <SetAxis tickList={tickListY} direction="v" />
       </VAxis>
       <PlotBox>
+        <SetGuide tickList={tickListX} direction="h" />
+        <SetGuide tickList={tickListY} direction="v" />
         <ScatterPlot data={[...modData]} />
       </PlotBox>
       <Space />
       <HAxis>
-        <SetAxis
-          set={{ min: range.xMin, max: range.xMax, interval: 10 }}
-          direction="h"
-        />
+        <SetAxis tickList={tickListX} direction="h" />
       </HAxis>
     </Wrapper>
   );

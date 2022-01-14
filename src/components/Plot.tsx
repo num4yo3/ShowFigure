@@ -27,18 +27,10 @@ const Scatter = (props: { data: params }) => {
 export const ScatterPlot = (props: { data: params[] }) => {
   const data: params[] = props.data;
   return (
-    <div
-      style={{
-        position: "relative",
-        width: "100%",
-        height: "100%",
-        outline: "solid 1px rgb(100,100,100)",
-        overflow: "hidden"
-      }}
-    >
+    <>
       {data.map((item, index) => (
         <Scatter key={index} data={{ ...item }} />
       ))}
-    </div>
+    </>
   );
 };

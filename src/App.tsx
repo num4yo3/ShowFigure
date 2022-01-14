@@ -10,7 +10,7 @@ export default function App() {
     { x: 34, y: 65 },
     { x: 35, y: 58 },
     { x: 46, y: 36 },
-    { x: 57, y: 30 },
+    { x: 17, y: 30 },
     { x: 68, y: 44 },
     { x: 79, y: 61 },
     { x: 82, y: 71 },
@@ -22,7 +22,9 @@ export default function App() {
       <FigureBox>
         <FigureContents
           data={[...data]}
-          // range={{ xMin: 0, xMax: 50, yMin: 20, yMax: 70 }}
+          range={{ xMin: 0, xMax: 120, yMin: 20, yMax: 100 }}
+          xtick={10}
+          ytick={5}
         />
       </FigureBox>
     </>

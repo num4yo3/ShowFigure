@@ -4,7 +4,7 @@ const boxStyleDefault = {
   justifyContent: "center",
   width: "80%",
   height: "400px",
-  backgroundColor: "silver",
+  // backgroundColor: "silver",
   outline: "solid 1px grey"
 };
 

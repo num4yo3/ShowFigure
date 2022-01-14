@@ -1,8 +1,3 @@
-type axisSetter = {
-  min: number;
-  max: number;
-  interval: number;
-};
 type axisData = {
   value: string;
   posR: number;
@@ -63,13 +58,38 @@ export const VerticalTick = (props: { data: axisData }) => {
   return <div style={{ ...defstyle }}>{data.value}</div>;
 };
 
-export const SetAxis = (props: { set: axisSetter; direction: string }) => {
-  const { set, direction } = props;
-  const axis: axisData[] = makeTickList(set);
+export const HorizontalGuide = (props: { data: axisData }) => {
+  const { data } = props;
+  const defstyle = {
+    position: "absolute",
+    left: data.posR * 100 + "%",
+    top: "0",
+    width: "0%",
+    height: "100%",
+    borderLeft: "solid 1px rgba(0,0,0,0.2)"
+  };
+  return <div style={{ ...defstyle }} />;
+};
+
+export const VerticalGuide = (props: { data: axisData }) => {
+  const { data } = props;
+  const defstyle = {
+    position: "absolute",
+    left: "0",
+    top: (1 - data.posR) * 100 + "%",
+    width: "100%",
+    height: "0%",
+    borderTop: "solid 1px rgba(0,0,0,0.2)"
+  };
+  return <div style={{ ...defstyle }} />;
+};
+
+export const SetAxis = (props: { tickList: axisData[]; direction: string }) => {
+  const { tickList, direction } = props;
   if (direction === "h") {
     return (
       <div style={{ position: "relative", width: "100%", height: "100%" }}>
-        {axis.map((item, index) => (
+        {tickList.map((item, index) => (
           <HorizontalTick key={index} data={item} />
         ))}
       </div>
@@ -77,10 +97,36 @@ export const SetAxis = (props: { set: axisSetter; direction: string }) => {
   } else if (direction === "v") {
     return (
       <div style={{ position: "relative", width: "100%", height: "100%" }}>
-        {axis.map((item, index) => (
+        {tickList.map((item, index) => (
           <VerticalTick key={index} data={item} />
         ))}
       </div>
+    );
+  } else {
+    return <div></div>;
+  }
+};
+
+export const SetGuide = (props: {
+  tickList: axisData[];
+  direction: string;
+}) => {
+  const { tickList, direction } = props;
+  if (direction === "h") {
+    return (
+      <>
+        {tickList.map((item, index) => (
+          <HorizontalGuide key={index} data={item} />
+        ))}
+      </>
+    );
+  } else if (direction === "v") {
+    return (
+      <>
+        {tickList.map((item, index) => (
+          <VerticalGuide key={index} data={item} />
+        ))}
+      </>
     );
   } else {
     return <div></div>;
