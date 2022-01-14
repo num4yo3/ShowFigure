@@ -42,8 +42,8 @@ export const HorizontalTick = (props: { data: axisData }) => {
     width: "3rem",
     transform: "translateX(-1.5rem) translateY(0.5rem)",
     textAlign: "center",
-    fontSize: "0.7rem",
-    outline: "dotted 1px"
+    fontSize: "0.7rem"
+    // outline: "dotted 1px"
   };
   return <div style={{ ...defstyle }}>{data.value}</div>;
 };

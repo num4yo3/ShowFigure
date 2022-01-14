@@ -72,7 +72,7 @@ const AddPosR = (data: position[], range: range) => {
 const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  width: 80%;
+  width: 90%;
   height: 80%;
   padding: 1rem;
   background-color: rgb(255, 255, 255);
@@ -87,9 +87,10 @@ const VAxis = styled.div`
 `;
 
 const HAxis = styled.div`
+  /* display: flex; */
   width: 90%;
-  height: 15%;
-  background-color: rgb(240, 240, 240);
+  height: 2rem;
+  /* background-color: rgb(240, 240, 240); */
 `;
 
 const PlotBox = styled.div`
@@ -159,7 +160,16 @@ export const FigureContents = (props: {
         <Space />
         <HAxis>
           <SetAxis tickList={tickListX} direction="h" />
-          <div style={{ position: "relative", border: "solid 1px" }}>ssss</div>
+          <div
+            style={{
+              textAlign: "center",
+              fontSize: "0.8rem",
+              fontWeight: "bold",
+              color: "rgb(100,100,100)"
+            }}
+          >
+            weight [kg]
+          </div>
         </HAxis>
       </Wrapper>
     </>
