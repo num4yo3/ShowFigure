@@ -16,7 +16,7 @@ const Scatter = (props: { data: params }) => {
     width: "6px",
     height: "6px",
     borderRadius: "3px",
-    backgroundColor: "rgb(255, 255, 255)",
+    backgroundColor: "rgba(0,0,0,0)",
     outline: "solid 1px rgb(0, 0, 0)",
     transform: "translateX(-3px) translateY(3px)"
   };

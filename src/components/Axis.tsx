@@ -4,7 +4,11 @@ type axisData = {
 };
 
 // 目盛りリストの作成
-export const makeTickList = (props: axisSetter) => {
+export const makeTickList = (props: {
+  min: number;
+  max: number;
+  interval: number;
+}) => {
   const width: number = props.max - props.min;
   const maxint: number = Math.floor(props.max / props.interval);
   const minint: number = Math.floor(props.min / props.interval);
@@ -35,9 +39,11 @@ export const HorizontalTick = (props: { data: axisData }) => {
     position: "absolute",
     left: data.posR * 100 + "%",
     top: "0",
-    width: "4rem",
-    transform: "translateX(-2rem) translateY(0.5rem)",
-    textAlign: "center"
+    width: "3rem",
+    transform: "translateX(-1.5rem) translateY(0.5rem)",
+    textAlign: "center",
+    fontSize: "0.7rem",
+    outline: "dotted 1px"
   };
   return <div style={{ ...defstyle }}>{data.value}</div>;
 };
@@ -53,7 +59,9 @@ export const VerticalTick = (props: { data: axisData }) => {
     top: (1 - data.posR) * 100 + "%",
     width: "3rem",
     height: "1rem",
-    transform: "translateX(-1.5rem) translateY(-0.5rem)"
+    transform: "translateX(0rem) translateY(-0.5rem)",
+    fontSize: "0.7rem",
+    outline: "dotted 1px"
   };
   return <div style={{ ...defstyle }}>{data.value}</div>;
 };

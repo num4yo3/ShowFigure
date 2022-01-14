@@ -72,32 +72,35 @@ const AddPosR = (data: position[], range: range) => {
 const Wrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  width: 90%;
+  width: 80%;
   height: 80%;
+  padding: 1rem;
   background-color: rgb(255, 255, 255);
+  outline: dotted 1px;
 `;
 
 const VAxis = styled.div`
-  width: 5%;
+  display: flex;
+  width: 10%;
   height: 90%;
-  /* background-color: rgb(240, 240, 240); */
+  background-color: rgb(240, 240, 240);
 `;
 
 const HAxis = styled.div`
-  width: 95%;
+  width: 90%;
   height: 10%;
   /* background-color: rgb(240, 240, 240); */
 `;
 
 const PlotBox = styled.div`
   position: relative;
-  width: 95%;
+  width: 90%;
   height: 90%;
-  outline: solid 1px rgb(0, 0, 0);
+  /* outline: solid 1px rgba(0, 0, 0, 0.2); */
 `;
 
 const Space = styled.div`
-  width: 5%;
+  width: 10%;
   height: 10%;
   /* background-color: rgb(240, 240, 240); */
 `;
@@ -124,19 +127,31 @@ export const FigureContents = (props: {
   const tickListY: axisData[] = makeTickList(yAxis);
 
   return (
-    <Wrapper>
-      <VAxis>
-        <SetAxis tickList={tickListY} direction="v" />
-      </VAxis>
-      <PlotBox>
-        <SetGuide tickList={tickListX} direction="h" />
-        <SetGuide tickList={tickListY} direction="v" />
-        <ScatterPlot data={[...modData]} />
-      </PlotBox>
-      <Space />
-      <HAxis>
-        <SetAxis tickList={tickListX} direction="h" />
-      </HAxis>
-    </Wrapper>
+    <>
+      <Wrapper>
+        <VAxis>
+          <div
+            style={{
+              width: "100%",
+              border: "solid 1px",
+              outline: "solid 1px",
+              writingMode: "vertical-lr"
+            }}
+          >
+            あああaaaaああ
+          </div>
+          <SetAxis tickList={tickListY} direction="v" />
+        </VAxis>
+        <PlotBox>
+          <SetGuide tickList={tickListX} direction="h" />
+          <SetGuide tickList={tickListY} direction="v" />
+          <ScatterPlot data={[...modData]} />
+        </PlotBox>
+        <Space />
+        <HAxis>
+          <SetAxis tickList={tickListX} direction="h" />
+        </HAxis>
+      </Wrapper>
+    </>
   );
 };
