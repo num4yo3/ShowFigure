@@ -57,11 +57,11 @@ export const VerticalTick = (props: { data: axisData }) => {
     alignItems: "center",
     left: "0",
     top: (1 - data.posR) * 100 + "%",
-    width: "3rem",
+    width: "80%",
     height: "1rem",
     transform: "translateX(0rem) translateY(-0.5rem)",
-    fontSize: "0.7rem",
-    outline: "dotted 1px"
+    fontSize: "0.7rem"
+    // outline: "dotted 1px"
   };
   return <div style={{ ...defstyle }}>{data.value}</div>;
 };

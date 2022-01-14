@@ -82,26 +82,26 @@ const Wrapper = styled.div`
 const VAxis = styled.div`
   display: flex;
   width: 10%;
-  height: 90%;
-  background-color: rgb(240, 240, 240);
+  height: 85%;
+  /* background-color: rgb(240, 240, 240); */
 `;
 
 const HAxis = styled.div`
   width: 90%;
-  height: 10%;
-  /* background-color: rgb(240, 240, 240); */
+  height: 15%;
+  background-color: rgb(240, 240, 240);
 `;
 
 const PlotBox = styled.div`
   position: relative;
   width: 90%;
-  height: 90%;
+  height: 85%;
   /* outline: solid 1px rgba(0, 0, 0, 0.2); */
 `;
 
 const Space = styled.div`
   width: 10%;
-  height: 10%;
+  height: 15%;
   /* background-color: rgb(240, 240, 240); */
 `;
 
@@ -132,13 +132,22 @@ export const FigureContents = (props: {
         <VAxis>
           <div
             style={{
-              width: "100%",
-              border: "solid 1px",
-              outline: "solid 1px",
-              writingMode: "vertical-lr"
+              position: "relative",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              whiteSpace: "nowrap",
+              top: "55%",
+              width: "1rem",
+              height: "1rem",
+              fontSize: "0.8rem",
+              fontWeight: "bold",
+              color: "rgb(100,100,100)",
+              transform: "rotate(-90deg)",
+              transformOrigin: "0 0"
             }}
           >
-            あああaaaaああ
+            Apple pie [piece]
           </div>
           <SetAxis tickList={tickListY} direction="v" />
         </VAxis>
@@ -150,6 +159,7 @@ export const FigureContents = (props: {
         <Space />
         <HAxis>
           <SetAxis tickList={tickListX} direction="h" />
+          <div style={{ position: "relative", border: "solid 1px" }}>ssss</div>
         </HAxis>
       </Wrapper>
     </>
