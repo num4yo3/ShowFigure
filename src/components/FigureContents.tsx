@@ -1,4 +1,4 @@
-import { ScatterPlot } from "./Plot";
+import { ScatterPlot, SetLegend } from "./ScatterPlot";
 import { SetAxis, SetGuide, makeTickList } from "./Axis";
 import styled from "styled-components";
 
@@ -105,6 +105,28 @@ const Space = styled.div`
   height: 15%;
   /* background-color: rgb(240, 240, 240); */
 `;
+const LabelX = styled.div`
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: rgb(100, 100, 100);
+`;
+
+const LabelY = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  white-space: nowrap;
+  top: 55%;
+  width: 1rem;
+  height: 1rem;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: rgb(100, 100, 100);
+  transform: rotate(-90deg);
+  transform-origin: 0 0;
+`;
 
 export const FigureContents = (props: {
   data: position[];
@@ -129,47 +151,21 @@ export const FigureContents = (props: {
 
   return (
     <>
+      <SetLegend name="Mos Barger" symbol="circle" color="blue" />
       <Wrapper>
         <VAxis>
-          <div
-            style={{
-              position: "relative",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              whiteSpace: "nowrap",
-              top: "55%",
-              width: "1rem",
-              height: "1rem",
-              fontSize: "0.8rem",
-              fontWeight: "bold",
-              color: "rgb(100,100,100)",
-              transform: "rotate(-90deg)",
-              transformOrigin: "0 0"
-            }}
-          >
-            Apple pie [piece]
-          </div>
+          <LabelY>Apple pie [piece]</LabelY>
           <SetAxis tickList={tickListY} direction="v" />
         </VAxis>
         <PlotBox>
           <SetGuide tickList={tickListX} direction="h" />
           <SetGuide tickList={tickListY} direction="v" />
-          <ScatterPlot data={[...modData]} />
+          <ScatterPlot data={[...modData]} symbol="circle" color="blue" />
         </PlotBox>
         <Space />
         <HAxis>
           <SetAxis tickList={tickListX} direction="h" />
-          <div
-            style={{
-              textAlign: "center",
-              fontSize: "0.8rem",
-              fontWeight: "bold",
-              color: "rgb(100,100,100)"
-            }}
-          >
-            weight [kg]
-          </div>
+          <LabelX>weight [kg]</LabelX>
         </HAxis>
       </Wrapper>
     </>

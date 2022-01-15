@@ -2,7 +2,7 @@ const boxStyleDefault = {
   display: "flex",
   flexWrap: "wrap",
   justifyContent: "center",
-  width: "80%",
+  width: "100%",
   height: "500px",
   // backgroundColor: "silver",
   outline: "solid 1px grey"
