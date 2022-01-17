@@ -110,9 +110,9 @@ const Legend = (props: { value: legend }) => {
     alignItems: "center",
     fontSize: "0.7rem",
     fontWeight: "bold",
-    padding: "0.1rem",
-    color: "rgb(100,100,100)",
-    border: "solid 1px"
+    padding: "0.1rem 0.5rem",
+    color: "rgb(100,100,100)"
+    // border: "solid 1px"
   };
   return (
     <div style={{ ...defaultStyle }}>

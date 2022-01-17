@@ -145,9 +145,11 @@ const HAxis = styled.div`
 
 const PlotBox = styled.div`
   position: relative;
-  width: 90%;
-  height: 85%;
-  /* outline: solid 1px rgba(0, 0, 0, 0.2); */
+  width: 89%;
+  height: 84%;
+  overflow: hidden;
+  padding: 0px;
+  outline: solid 1px rgba(0, 0, 0, 0.5);
 `;
 
 const Space = styled.div`
@@ -215,8 +217,19 @@ export const FigureContents = (props: {
     symbol: value.symbol,
     color: value.color
   }));
-  console.log(dataRange, xAxis);
-  const adjustPlot = { top: "0%", left: "10%", width: "50%", height: "100%" };
+
+  const dWidth = dataRange.x.max - dataRange.x.min;
+  const dHeight = dataRange.y.max - dataRange.y.min;
+  const aWidth = xAxis.max - xAxis.min;
+  const aHeight = yAxis.max - yAxis.min;
+  console.log(dataRange, dWidth, dHeight, aWidth, aHeight);
+
+  const adjustPlot = {
+    top: -((dataRange.y.max - yAxis.max) / aHeight) * 100 + "%",
+    left: ((dataRange.x.min - xAxis.min) / aWidth) * 100 + "%",
+    width: (dWidth / aWidth) * 100 + "%",
+    height: (dHeight / aHeight) * 100 + "%"
+  };
   return (
     <>
       <SetLegend listLegend={listLegend} />
