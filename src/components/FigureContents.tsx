@@ -126,7 +126,7 @@ const Wrapper = styled.div`
   height: 80%;
   padding: 1rem;
   background-color: rgb(255, 255, 255);
-  outline: dotted 1px;
+  /* outline: dotted 1px; */
 `;
 
 const VAxis = styled.div`

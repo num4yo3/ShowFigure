@@ -29,12 +29,18 @@ export default function App() {
     { x: 4, y: 16 },
     { x: 5, y: 25 },
     { x: 6, y: 36 },
-    { x: 7, y: 49 }
+    { x: 7, y: 45 },
+    { x: 8, y: 54 },
+    { x: 9, y: 59 },
+    { x: 10, y: 63 },
+    { x: 11, y: 65 },
+    { x: 12, y: 64 },
+    { x: 13, y: 61 }
   ];
   const dataset1: dataset = {
     data: data1,
     name: "MosBarger",
-    symbol: "circle",
+    symbol: "square",
     color: "blue"
   };
 
@@ -48,8 +54,8 @@ export default function App() {
     x: { min?: number; max?: number; tick?: number; label?: string };
     y: { min?: number; max?: number; tick?: number; label?: string };
   } = {
-    x: { min: 0, max: 40, tick: 10, label: "x [m]" },
-    y: { min: 0, max: 65, tick: 10, label: "y [m/s]" }
+    x: { min: -10, max: 40, tick: 10, label: "x [m]" },
+    y: { min: 0, max: 70, tick: 10, label: "y [m/s]" }
   };
   return (
     <>
