@@ -45,7 +45,7 @@ export default function App() {
     y: { min?: number; max?: number; tick?: number; label?: string };
   } = {
     x: { max: 60, tick: 10, label: "x [m]" },
-    y: { min: 0, max: 60, tick: 10, label: "y [m/s]" }
+    y: { min: 10, max: 60, tick: 10, label: "y [m/s]" }
   };
   return (
     <>

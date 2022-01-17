@@ -39,7 +39,7 @@ type legend = {
   color: string;
 };
 
-const pickDataFromRange = (
+const pickRange = (
   poslist: position[],
   xRange: { min?: number; max?: number },
   yRange: { min?: number; max?: number }
@@ -74,9 +74,7 @@ const pickDataRange = (
   xRange: { min?: number; max?: number },
   yRange: { min?: number; max?: number }
 ) => {
-  const drange = dataset.map((item) =>
-    pickDataFromRange(item.data, xRange, yRange)
-  );
+  const drange = dataset.map((item) => pickRange(item.data, xRange, yRange));
   return {
     x: {
       min: Math.min(...drange.map((value) => value.x.min)),
@@ -184,14 +182,13 @@ export const FigureContents = (props: {
   const yrange = { min: range.y.min, max: range.y.max };
   // 指定された範囲内におけるデータの最小値、最大値を計算
   const dataRange = pickDataRange(dataset, xrange, yrange);
-  console.log(dataRange);
   //指定された範囲をマージ
   const xAxis: axis = { ...dataRange.x, ...range.x };
   const yAxis: axis = { ...dataRange.y, ...range.y };
 
   //表示位置を取得
   const modData: params[] = AddPosR(dataset[0].data, xAxis, yAxis);
-
+  console.log(modData);
   const tickListX: axisData[] = makeTickList(xAxis);
   const tickListY: axisData[] = makeTickList(yAxis);
   const listLegend: legend[] = dataset.map((value) => ({
