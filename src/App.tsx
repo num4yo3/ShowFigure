@@ -1,33 +1,56 @@
 import { FigureBox } from "./components/FigureBox";
 import { FigureContents } from "./components/FigureContents";
 
-export default function App() {
-  const data = [
-    { x: 10, y: 50 },
-    { x: 15, y: 45 },
-    { x: 22, y: 44 },
-    { x: 27, y: 61 },
-    { x: 34, y: 65 },
-    { x: 35, y: 58 },
-    { x: 46, y: 36 },
-    { x: 17, y: 30 },
-    { x: 68, y: 44 },
-    { x: 79, y: 61 },
-    { x: 82, y: 71 },
-    { x: 100, y: 55 },
-    { x: 101, y: 55 },
-    { x: 102, y: 55 }
-  ];
+type dataset = {
+  data: { x: number; y: number }[];
+  name: string;
+  symbol: string;
+  color: string;
+};
 
+export default function App() {
+  const data1 = [
+    { x: 10, y: 80 },
+    { x: 20, y: 70 },
+    { x: 30, y: 60 },
+    { x: 40, y: 50 },
+    { x: 50, y: 40 },
+    { x: 60, y: 30 },
+    { x: 70, y: 20 }
+  ];
+  const data2 = [
+    { x: -3, y: 9 },
+    { x: -2, y: 4 },
+    { x: -1, y: 1 },
+    { x: 0, y: 0 },
+    { x: 1, y: 1 },
+    { x: 2, y: 4 },
+    { x: 3, y: 9 }
+  ];
+  const dataset1: dataset = {
+    data: data1,
+    name: "MosBarger",
+    symbol: "circle",
+    color: "blue"
+  };
+
+  const dataset2: dataset = {
+    data: data2,
+    name: "Macdnald",
+    symbol: "circle",
+    color: "red"
+  };
+  const range: {
+    x: { min?: number; max?: number; tick?: number; label?: string };
+    y: { min?: number; max?: number; tick?: number; label?: string };
+  } = {
+    x: { max: 60, tick: 10, label: "x [m]" },
+    y: { min: 0, max: 60, tick: 10, label: "y [m/s]" }
+  };
   return (
     <>
       <FigureBox>
-        <FigureContents
-          data={[...data]}
-          range={{ xMin: 0, xMax: 100, yMin: 20, yMax: 100 }}
-          xtick={10}
-          ytick={5}
-        />
+        <FigureContents dataset={[dataset1, dataset2]} range={range} />
       </FigureBox>
     </>
   );

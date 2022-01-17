@@ -7,26 +7,27 @@ type axisData = {
 export const makeTickList = (props: {
   min: number;
   max: number;
-  interval: number;
+  tick?: number;
 }) => {
+  const dtick: number = props.tick || 1;
   const width: number = props.max - props.min;
-  const maxint: number = Math.floor(props.max / props.interval);
-  const minint: number = Math.floor(props.min / props.interval);
+  const maxint: number = Math.floor(props.max / dtick);
+  const minint: number = Math.floor(props.min / dtick);
   const num: number = maxint - minint;
   let list: axisData[] = [];
   let tick: axisData = { value: "", posR: 0 };
 
-  if (props.min % props.interval === 0) {
+  if (props.min % dtick === 0) {
     tick = {
-      value: `${minint * props.interval}`,
+      value: `${minint * dtick}`,
       posR: 0
     };
   }
   list.push(tick);
   for (let i = 1; i <= num; i++) {
     tick = {
-      value: `${(minint + i) * props.interval}`,
-      posR: ((minint + i) * props.interval - props.min) / width
+      value: `${(minint + i) * dtick}`,
+      posR: ((minint + i) * dtick - props.min) / width
     };
     list.push(tick);
   }

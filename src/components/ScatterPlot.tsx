@@ -7,6 +7,19 @@ type params = {
   posR: position;
 };
 
+type legend = {
+  name: string;
+  symbol: string;
+  color: string;
+};
+
+type dataset = {
+  data: position[];
+  name: string;
+  symbol: string;
+  color: string;
+};
+
 const symbolList = {
   circle: {
     width: "100%",
@@ -90,8 +103,8 @@ const Scatter = (props: { data: params; symbol: string; color: string }) => {
   );
 };
 
-const Legend = (props: { name: string; symbol: string; color: string }) => {
-  const { name, symbol, color } = props;
+const Legend = (props: { value: legend }) => {
+  const { value } = props;
   const defaultStyle = {
     display: "flex",
     alignItems: "center",
@@ -104,18 +117,14 @@ const Legend = (props: { name: string; symbol: string; color: string }) => {
   return (
     <div style={{ ...defaultStyle }}>
       <div style={{ margin: "0 0.4rem" }}>
-        <Symbol symbol={symbol} color={color} translate={false} />
+        <Symbol symbol={value.symbol} color={value.color} translate={false} />
       </div>
-      {": " + name}
+      {": " + value.name}
     </div>
   );
 };
 
-export const ScatterPlot = (props: {
-  data: params[];
-  symbol: string;
-  color: string;
-}) => {
+export const ScatterPlot = (props: { dataset: dataset }) => {
   const { data, symbol, color } = props;
   return (
     <>
@@ -126,14 +135,13 @@ export const ScatterPlot = (props: {
   );
 };
 
-export const SetLegend = (props: {
-  name: string;
-  symbol: string;
-  color: string;
-}) => {
+export const SetLegend = (props: { listLegend: legend[] }) => {
+  const { listLegend } = props;
   return (
-    <div style={{ display: "flex" }}>
-      <Legend {...props}></Legend>
+    <div style={{ display: "flex", padding: "4px" }}>
+      {listLegend.map((item, index) => (
+        <Legend key={index} value={item} />
+      ))}
     </div>
   );
 };

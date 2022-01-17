@@ -2,6 +2,13 @@ import { ScatterPlot, SetLegend } from "./ScatterPlot";
 import { SetAxis, SetGuide, makeTickList } from "./Axis";
 import styled from "styled-components";
 
+type dataset = {
+  data: position[];
+  name: string;
+  symbol: string;
+  color: string;
+};
+
 type position = {
   x: number;
   y: number;
@@ -13,10 +20,12 @@ type params = {
 };
 
 type range = {
-  xMin: number;
-  xMax: number;
-  yMin: number;
-  yMax: number;
+  min: number;
+  max: number;
+};
+type axis = range & {
+  tick?: number;
+  label?: string;
 };
 
 type axisData = {
@@ -24,46 +33,71 @@ type axisData = {
   posR: number;
 };
 
+type legend = {
+  name: string;
+  symbol: string;
+  color: string;
+};
+
 const pickDataFromRange = (
   poslist: position[],
-  range?: { xMin?: number; xMax?: number; yMin?: number; yMax?: number }
+  xRange: { min?: number; max?: number },
+  yRange: { min?: number; max?: number }
 ) => {
   let list: position[] = poslist;
-  if (range.xMin !== undefined) {
-    list = list.filter((pos) => pos.x >= range.xMin);
-  }
-  if (range.xMax !== undefined) {
-    list = list.filter((pos) => pos.x <= range.xMax);
-  }
-  if (range.yMin !== undefined) {
-    list = list.filter((pos) => pos.y >= range.yMin);
-  }
-  if (range.yMax !== undefined) {
-    list = list.filter((pos) => pos.y <= range.yMax);
-  }
-  return list;
+  if (xRange.min !== undefined)
+    list = list.filter((pos) => pos.x >= xRange.min);
+
+  if (xRange.max !== undefined)
+    list = list.filter((pos) => pos.x <= xRange.max);
+
+  if (yRange.min !== undefined)
+    list = list.filter((pos) => pos.y >= yRange.min);
+
+  if (yRange.max !== undefined)
+    list = list.filter((pos) => pos.y <= yRange.max);
+
+  return {
+    x: {
+      min: Math.min(...list.map((value) => value.x)),
+      max: Math.max(...list.map((value) => value.x))
+    },
+    y: {
+      min: Math.min(...list.map((value) => value.y)),
+      max: Math.max(...list.map((value) => value.y))
+    }
+  };
 };
 // データの最小値, 最大値を返す
-const pickDataRange = (poslist: position[]) => {
-  const posx: number[] = poslist.map((value) => value.x);
-  const posy: number[] = poslist.map((value) => value.y);
+const pickDataRange = (
+  dataset: dataset[],
+  xRange: { min?: number; max?: number },
+  yRange: { min?: number; max?: number }
+) => {
+  const drange = dataset.map((item) =>
+    pickDataFromRange(item.data, xRange, yRange)
+  );
   return {
-    xMin: Math.min(...posx),
-    xMax: Math.max(...posx),
-    yMin: Math.min(...posy),
-    yMax: Math.max(...posy)
+    x: {
+      min: Math.min(...drange.map((value) => value.x.min)),
+      max: Math.max(...drange.map((value) => value.x.max))
+    },
+    y: {
+      min: Math.min(...drange.map((value) => value.y.min)),
+      max: Math.max(...drange.map((value) => value.y.max))
+    }
   };
 };
 
 // データ座標からプロット窓上での相対位置を計算
-const AddPosR = (data: position[], range: range) => {
-  const xWidth: number = range.xMax - range.xMin;
-  const yWidth: number = range.yMax - range.yMin;
+const AddPosR = (data: position[], xAxis: range, yAxis: range) => {
+  const xWidth: number = xAxis.max - xAxis.min;
+  const yWidth: number = yAxis.max - yAxis.min;
   const modData: params[] = data.map((item) => ({
     pos: item,
     posR: {
-      x: (item.x - range.xMin) / xWidth,
-      y: (item.y - range.yMin) / yWidth
+      x: (item.x - xAxis.min) / xWidth,
+      y: (item.y - yAxis.min) / yWidth
     }
   }));
   return modData;
@@ -129,43 +163,64 @@ const LabelY = styled.div`
 `;
 
 export const FigureContents = (props: {
-  data: position[];
-  range?: { xMin?: number; xMax?: number; yMin?: number; yMax?: number };
-  xtick?: number;
-  ytick?: number;
-  setAxisX?: { init: number; interval: number };
+  dataset: dataset[];
+  range: {
+    x: {
+      min?: number;
+      max?: number;
+      tick?: number;
+      label?: string;
+    };
+    y: {
+      min?: number;
+      max?: number;
+      tick?: number;
+      label?: string;
+    };
+  };
 }) => {
-  const data = pickDataFromRange(props.data, props.range);
-  const xtick = props.xtick || 1;
-  const ytick = props.ytick || 1;
-  // プロットする範囲をrangeで指定
-  const dataRange: range = pickDataRange(data);
-  const range: range = { ...dataRange, ...props.range };
-  //表示位置を取得
-  const modData: params[] = AddPosR(data, range);
+  const { dataset, range } = props;
+  const xrange = { min: range.x.min, max: range.x.max };
+  const yrange = { min: range.y.min, max: range.y.max };
+  // 指定された範囲内におけるデータの最小値、最大値を計算
+  const dataRange = pickDataRange(dataset, xrange, yrange);
+  console.log(dataRange);
+  //指定された範囲をマージ
+  const xAxis: axis = { ...dataRange.x, ...range.x };
+  const yAxis: axis = { ...dataRange.y, ...range.y };
 
-  const xAxis = { min: range.xMin, max: range.xMax, interval: xtick };
-  const yAxis = { min: range.yMin, max: range.yMax, interval: ytick };
+  //表示位置を取得
+  const modData: params[] = AddPosR(dataset[0].data, xAxis, yAxis);
+
   const tickListX: axisData[] = makeTickList(xAxis);
   const tickListY: axisData[] = makeTickList(yAxis);
+  const listLegend: legend[] = dataset.map((value) => ({
+    name: value.name,
+    symbol: value.symbol,
+    color: value.color
+  }));
 
   return (
     <>
-      <SetLegend name="Mos Barger" symbol="circle" color="blue" />
+      <SetLegend listLegend={listLegend} />
       <Wrapper>
         <VAxis>
-          <LabelY>Apple pie [piece]</LabelY>
+          <LabelY>{yAxis.label}</LabelY>
           <SetAxis tickList={tickListY} direction="v" />
         </VAxis>
         <PlotBox>
           <SetGuide tickList={tickListX} direction="h" />
           <SetGuide tickList={tickListY} direction="v" />
-          <ScatterPlot data={[...modData]} symbol="circle" color="blue" />
+          <ScatterPlot
+            data={[...modData]}
+            symbol={dataset[0].symbol}
+            color={dataset[0].color}
+          />
         </PlotBox>
         <Space />
         <HAxis>
           <SetAxis tickList={tickListX} direction="h" />
-          <LabelX>weight [kg]</LabelX>
+          <LabelX>{xAxis.label}</LabelX>
         </HAxis>
       </Wrapper>
     </>
