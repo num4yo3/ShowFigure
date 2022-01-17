@@ -99,7 +99,7 @@ const AddPosR = (dataset: dataset[]) => {
   const range = pickDataRange(dataset);
   const xWidth: number = range.x.max - range.x.min;
   const yWidth: number = range.y.max - range.y.min;
-  const posList: {
+  const modData: {
     data: params[];
     name: string;
     symbol: string;
@@ -116,7 +116,7 @@ const AddPosR = (dataset: dataset[]) => {
     symbol: value.symbol,
     color: value.color
   }));
-  return posList;
+  return { modData, range };
 };
 
 const Wrapper = styled.div`
@@ -201,12 +201,13 @@ export const FigureContents = (props: {
   // 指定された範囲内におけるデータの最小値、最大値を計算
   const axisRange = pickDataRange(dataset, xrange, yrange);
   //指定された範囲をマージ
-  console.log(axisRange);
   const xAxis: axis = { ...axisRange.x, ...range.x };
   const yAxis: axis = { ...axisRange.y, ...range.y };
 
   //表示位置を取得
-  const modData: moddataset[] = AddPosR(dataset);
+  const papas = AddPosR(dataset);
+  const modData: moddataset[] = papas.modData;
+  const dataRange = papas.range;
   const tickListX: axisData[] = makeTickList(xAxis);
   const tickListY: axisData[] = makeTickList(yAxis);
   const listLegend: legend[] = dataset.map((value) => ({
@@ -214,6 +215,7 @@ export const FigureContents = (props: {
     symbol: value.symbol,
     color: value.color
   }));
+  console.log(dataRange, xAxis);
   const adjustPlot = { top: "0%", left: "10%", width: "50%", height: "100%" };
   return (
     <>
