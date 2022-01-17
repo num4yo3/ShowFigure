@@ -1,4 +1,4 @@
-import { ScatterPlot, SetLegend } from "./ScatterPlot";
+import { ScatterPlots, SetLegend } from "./ScatterPlot";
 import { SetAxis, SetGuide, makeTickList } from "./Axis";
 import styled from "styled-components";
 
@@ -8,7 +8,12 @@ type dataset = {
   symbol: string;
   color: string;
 };
-
+type moddataset = {
+  data: params[];
+  name: string;
+  symbol: string;
+  color: string;
+};
 type position = {
   x: number;
   y: number;
@@ -41,22 +46,24 @@ type legend = {
 
 const pickRange = (
   poslist: position[],
-  xRange: { min?: number; max?: number },
-  yRange: { min?: number; max?: number }
+  xRange?: { min?: number; max?: number },
+  yRange?: { min?: number; max?: number }
 ) => {
   let list: position[] = poslist;
-  if (xRange.min !== undefined)
-    list = list.filter((pos) => pos.x >= xRange.min);
+  if (xRange !== undefined) {
+    if (xRange.min !== undefined)
+      list = list.filter((pos) => pos.x >= xRange.min);
 
-  if (xRange.max !== undefined)
-    list = list.filter((pos) => pos.x <= xRange.max);
+    if (xRange.max !== undefined)
+      list = list.filter((pos) => pos.x <= xRange.max);
+  }
+  if (yRange !== undefined) {
+    if (yRange.min !== undefined)
+      list = list.filter((pos) => pos.y >= yRange.min);
 
-  if (yRange.min !== undefined)
-    list = list.filter((pos) => pos.y >= yRange.min);
-
-  if (yRange.max !== undefined)
-    list = list.filter((pos) => pos.y <= yRange.max);
-
+    if (yRange.max !== undefined)
+      list = list.filter((pos) => pos.y <= yRange.max);
+  }
   return {
     x: {
       min: Math.min(...list.map((value) => value.x)),
@@ -71,8 +78,8 @@ const pickRange = (
 // データの最小値, 最大値を返す
 const pickDataRange = (
   dataset: dataset[],
-  xRange: { min?: number; max?: number },
-  yRange: { min?: number; max?: number }
+  xRange?: { min?: number; max?: number },
+  yRange?: { min?: number; max?: number }
 ) => {
   const drange = dataset.map((item) => pickRange(item.data, xRange, yRange));
   return {
@@ -88,17 +95,28 @@ const pickDataRange = (
 };
 
 // データ座標からプロット窓上での相対位置を計算
-const AddPosR = (data: position[], xAxis: range, yAxis: range) => {
-  const xWidth: number = xAxis.max - xAxis.min;
-  const yWidth: number = yAxis.max - yAxis.min;
-  const modData: params[] = data.map((item) => ({
-    pos: item,
-    posR: {
-      x: (item.x - xAxis.min) / xWidth,
-      y: (item.y - yAxis.min) / yWidth
-    }
+const AddPosR = (dataset: dataset[]) => {
+  const range = pickDataRange(dataset);
+  const xWidth: number = range.x.max - range.x.min;
+  const yWidth: number = range.y.max - range.y.min;
+  const posList: {
+    data: params[];
+    name: string;
+    symbol: string;
+    color: string;
+  }[] = dataset.map((value) => ({
+    data: value.data.map((item) => ({
+      pos: { x: item.x, y: item.y },
+      posR: {
+        x: (item.x - range.x.min) / xWidth,
+        y: (item.y - range.y.min) / yWidth
+      }
+    })),
+    name: value.name,
+    symbol: value.symbol,
+    color: value.color
   }));
-  return modData;
+  return posList;
 };
 
 const Wrapper = styled.div`
@@ -181,14 +199,14 @@ export const FigureContents = (props: {
   const xrange = { min: range.x.min, max: range.x.max };
   const yrange = { min: range.y.min, max: range.y.max };
   // 指定された範囲内におけるデータの最小値、最大値を計算
-  const dataRange = pickDataRange(dataset, xrange, yrange);
+  const axisRange = pickDataRange(dataset, xrange, yrange);
   //指定された範囲をマージ
-  const xAxis: axis = { ...dataRange.x, ...range.x };
-  const yAxis: axis = { ...dataRange.y, ...range.y };
+  console.log(axisRange);
+  const xAxis: axis = { ...axisRange.x, ...range.x };
+  const yAxis: axis = { ...axisRange.y, ...range.y };
 
   //表示位置を取得
-  const modData: params[] = AddPosR(dataset[0].data, xAxis, yAxis);
-  console.log(modData);
+  const modData: moddataset[] = AddPosR(dataset);
   const tickListX: axisData[] = makeTickList(xAxis);
   const tickListY: axisData[] = makeTickList(yAxis);
   const listLegend: legend[] = dataset.map((value) => ({
@@ -196,7 +214,7 @@ export const FigureContents = (props: {
     symbol: value.symbol,
     color: value.color
   }));
-
+  const adjustPlot = { top: "0%", left: "10%", width: "50%", height: "100%" };
   return (
     <>
       <SetLegend listLegend={listLegend} />
@@ -205,14 +223,13 @@ export const FigureContents = (props: {
           <LabelY>{yAxis.label}</LabelY>
           <SetAxis tickList={tickListY} direction="v" />
         </VAxis>
+        {/* PlotBoxがrelative */}
         <PlotBox>
           <SetGuide tickList={tickListX} direction="h" />
           <SetGuide tickList={tickListY} direction="v" />
-          <ScatterPlot
-            data={[...modData]}
-            symbol={dataset[0].symbol}
-            color={dataset[0].color}
-          />
+          <div style={{ position: "relative", ...adjustPlot }}>
+            <ScatterPlots dataset={modData} />
+          </div>
         </PlotBox>
         <Space />
         <HAxis>

@@ -25,7 +25,8 @@ export default function App() {
     { x: 0, y: 0 },
     { x: 1, y: 1 },
     { x: 2, y: 4 },
-    { x: 3, y: 9 }
+    { x: 3, y: 9 },
+    { x: 4, y: 16 }
   ];
   const dataset1: dataset = {
     data: data1,
@@ -44,8 +45,8 @@ export default function App() {
     x: { min?: number; max?: number; tick?: number; label?: string };
     y: { min?: number; max?: number; tick?: number; label?: string };
   } = {
-    x: { max: 60, tick: 10, label: "x [m]" },
-    y: { min: 10, max: 60, tick: 10, label: "y [m/s]" }
+    x: { tick: 10, label: "x [m]" },
+    y: { tick: 10, label: "y [m/s]" }
   };
   return (
     <>

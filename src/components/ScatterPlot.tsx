@@ -13,8 +13,8 @@ type legend = {
   color: string;
 };
 
-type dataset = {
-  data: position[];
+type moddataset = {
+  data: params[];
   name: string;
   symbol: string;
   color: string;
@@ -124,17 +124,29 @@ const Legend = (props: { value: legend }) => {
   );
 };
 
-export const ScatterPlot = (props: { dataset: dataset }) => {
-  const { data, symbol, color } = props;
+export const Plot = (props: { dataset: moddataset }) => {
+  const { dataset } = props;
+  const symbol = dataset.symbol;
+  const color = dataset.color;
   return (
     <>
-      {data.map((item, index) => (
-        <Scatter key={index} data={{ ...item }} symbol={symbol} color={color} />
+      {dataset.data.map((item, index) => (
+        <Scatter key={index} data={item} symbol={symbol} color={color} />
       ))}
     </>
   );
 };
 
+export const ScatterPlots = (props: { dataset: moddataset[] }) => {
+  const { dataset } = props;
+  return (
+    <>
+      {dataset.map((value, index) => (
+        <Plot key={index} dataset={value} />
+      ))}
+    </>
+  );
+};
 export const SetLegend = (props: { listLegend: legend[] }) => {
   const { listLegend } = props;
   return (
