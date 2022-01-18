@@ -1,5 +1,6 @@
 import { FigureBox } from "./components/FigureBox";
 import { FigureContents } from "./components/FigureContents";
+import { ScatterPlots } from "./components/ScatterPlot";
 
 type dataset = {
   data: { x: number; y: number }[];
@@ -33,7 +34,7 @@ export default function App() {
     { x: 8, y: 54 },
     { x: 9, y: 59 },
     { x: 10, y: 63 },
-    { x: 11, y: 65 },
+    { x: 11, y: 64.5 },
     { x: 12, y: 64 },
     { x: 13, y: 61 }
   ];
@@ -54,13 +55,16 @@ export default function App() {
     x: { min?: number; max?: number; tick?: number; label?: string };
     y: { min?: number; max?: number; tick?: number; label?: string };
   } = {
-    x: { min: -10, max: 40, tick: 10, label: "x [m]" },
-    y: { min: 0, max: 70, tick: 10, label: "y [m/s]" }
+    x: { min: -10, max: 80, tick: 10, label: "x [m]" },
+    y: { min: -10, max: 100, tick: 10, label: "y [m/s]" }
   };
   return (
     <>
       <FigureBox>
-        <FigureContents dataset={[dataset1, dataset2]} range={range} />
+        <FigureContents
+          dataset={[dataset1, dataset2]}
+          range={range}
+        ></FigureContents>
       </FigureBox>
     </>
   );

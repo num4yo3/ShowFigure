@@ -1,22 +1,31 @@
 import { ScatterPlots, SetLegend } from "./ScatterPlot";
 import { SetAxis, SetGuide, makeTickList } from "./Axis";
+import { pickDataRange } from "./DataRange";
 import styled from "styled-components";
 
-type dataset = {
-  data: position[];
-  name: string;
-  symbol: string;
-  color: string;
+type position = {
+  x: number;
+  y: number;
 };
+
 type moddataset = {
   data: params[];
   name: string;
   symbol: string;
   color: string;
 };
-type position = {
-  x: number;
-  y: number;
+
+type legend = {
+  name: string;
+  symbol: string;
+  color: string;
+};
+
+type dataset = {
+  data: position[];
+  name: string;
+  symbol: string;
+  color: string;
 };
 
 type params = {
@@ -28,6 +37,7 @@ type range = {
   min: number;
   max: number;
 };
+
 type axis = range & {
   tick?: number;
   label?: string;
@@ -36,87 +46,6 @@ type axis = range & {
 type axisData = {
   value: string;
   posR: number;
-};
-
-type legend = {
-  name: string;
-  symbol: string;
-  color: string;
-};
-
-const pickRange = (
-  poslist: position[],
-  xRange?: { min?: number; max?: number },
-  yRange?: { min?: number; max?: number }
-) => {
-  let list: position[] = poslist;
-  if (xRange !== undefined) {
-    if (xRange.min !== undefined)
-      list = list.filter((pos) => pos.x >= xRange.min);
-
-    if (xRange.max !== undefined)
-      list = list.filter((pos) => pos.x <= xRange.max);
-  }
-  if (yRange !== undefined) {
-    if (yRange.min !== undefined)
-      list = list.filter((pos) => pos.y >= yRange.min);
-
-    if (yRange.max !== undefined)
-      list = list.filter((pos) => pos.y <= yRange.max);
-  }
-  return {
-    x: {
-      min: Math.min(...list.map((value) => value.x)),
-      max: Math.max(...list.map((value) => value.x))
-    },
-    y: {
-      min: Math.min(...list.map((value) => value.y)),
-      max: Math.max(...list.map((value) => value.y))
-    }
-  };
-};
-// データの最小値, 最大値を返す
-const pickDataRange = (
-  dataset: dataset[],
-  xRange?: { min?: number; max?: number },
-  yRange?: { min?: number; max?: number }
-) => {
-  const drange = dataset.map((item) => pickRange(item.data, xRange, yRange));
-  return {
-    x: {
-      min: Math.min(...drange.map((value) => value.x.min)),
-      max: Math.max(...drange.map((value) => value.x.max))
-    },
-    y: {
-      min: Math.min(...drange.map((value) => value.y.min)),
-      max: Math.max(...drange.map((value) => value.y.max))
-    }
-  };
-};
-
-// データ座標からプロット窓上での相対位置を計算
-const AddPosR = (dataset: dataset[]) => {
-  const range = pickDataRange(dataset);
-  const xWidth: number = range.x.max - range.x.min;
-  const yWidth: number = range.y.max - range.y.min;
-  const modData: {
-    data: params[];
-    name: string;
-    symbol: string;
-    color: string;
-  }[] = dataset.map((value) => ({
-    data: value.data.map((item) => ({
-      pos: { x: item.x, y: item.y },
-      posR: {
-        x: (item.x - range.x.min) / xWidth,
-        y: (item.y - range.y.min) / yWidth
-      }
-    })),
-    name: value.name,
-    symbol: value.symbol,
-    color: value.color
-  }));
-  return { modData, range };
 };
 
 const Wrapper = styled.div`
@@ -135,7 +64,6 @@ const VAxis = styled.div`
   height: 85%;
   /* background-color: rgb(240, 240, 240); */
 `;
-
 const HAxis = styled.div`
   /* display: flex; */
   width: 90%;
@@ -157,6 +85,7 @@ const Space = styled.div`
   height: 15%;
   /* background-color: rgb(240, 240, 240); */
 `;
+
 const LabelX = styled.div`
   text-align: center;
   font-size: 0.8rem;
@@ -198,18 +127,16 @@ export const FigureContents = (props: {
   };
 }) => {
   const { dataset, range } = props;
+  const data = dataset.map((item) => item.data);
   const xrange = { min: range.x.min, max: range.x.max };
   const yrange = { min: range.y.min, max: range.y.max };
   // 指定された範囲内におけるデータの最小値、最大値を計算
-  const axisRange = pickDataRange(dataset, xrange, yrange);
+  const axisRange = pickDataRange(data, xrange, yrange);
   //指定された範囲をマージ
   const xAxis: axis = { ...axisRange.x, ...range.x };
   const yAxis: axis = { ...axisRange.y, ...range.y };
 
   //表示位置を取得
-  const papas = AddPosR(dataset);
-  const modData: moddataset[] = papas.modData;
-  const dataRange = papas.range;
   const tickListX: axisData[] = makeTickList(xAxis);
   const tickListY: axisData[] = makeTickList(yAxis);
   const listLegend: legend[] = dataset.map((value) => ({
@@ -218,6 +145,7 @@ export const FigureContents = (props: {
     color: value.color
   }));
 
+  const dataRange = pickDataRange(data);
   const dWidth = dataRange.x.max - dataRange.x.min;
   const dHeight = dataRange.y.max - dataRange.y.min;
   const aWidth = xAxis.max - xAxis.min;
@@ -238,12 +166,11 @@ export const FigureContents = (props: {
           <LabelY>{yAxis.label}</LabelY>
           <SetAxis tickList={tickListY} direction="v" />
         </VAxis>
-        {/* PlotBoxがrelative */}
         <PlotBox>
           <SetGuide tickList={tickListX} direction="h" />
           <SetGuide tickList={tickListY} direction="v" />
           <div style={{ position: "relative", ...adjustPlot }}>
-            <ScatterPlots dataset={modData} />
+            <ScatterPlots dataset={dataset} />
           </div>
         </PlotBox>
         <Space />

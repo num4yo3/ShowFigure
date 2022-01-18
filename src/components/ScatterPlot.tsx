@@ -1,3 +1,5 @@
+import { AddPosR, pickDataRange } from "./DataRange";
+
 type position = {
   x: number;
   y: number;
@@ -8,6 +10,12 @@ type params = {
 };
 
 type legend = {
+  name: string;
+  symbol: string;
+  color: string;
+};
+type dataset = {
+  data: position[];
   name: string;
   symbol: string;
   color: string;
@@ -137,11 +145,19 @@ export const Plot = (props: { dataset: moddataset }) => {
   );
 };
 
-export const ScatterPlots = (props: { dataset: moddataset[] }) => {
+export const ScatterPlots = (props: { dataset: dataset[] }) => {
   const { dataset } = props;
+  const range = pickDataRange(dataset.map((item) => item.data));
+  const modData = dataset.map((item) => ({
+    data: AddPosR(item.data, range),
+    name: item.name,
+    symbol: item.symbol,
+    color: item.color
+  }));
+
   return (
     <>
-      {dataset.map((value, index) => (
+      {modData.map((value, index) => (
         <Plot key={index} dataset={value} />
       ))}
     </>
