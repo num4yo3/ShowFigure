@@ -7,6 +7,7 @@ type dataset = {
   name: string;
   symbol: string;
   color: string;
+  index: string;
 };
 
 export default function App() {
@@ -42,29 +43,28 @@ export default function App() {
     data: data1,
     name: "MosBarger",
     symbol: "square",
-    color: "blue"
+    color: "blue",
+    index: "1"
   };
 
   const dataset2: dataset = {
     data: data2,
     name: "Macdnald",
     symbol: "circle",
-    color: "red"
+    color: "red",
+    index: "2"
   };
   const range: {
     x: { min?: number; max?: number; tick?: number; label?: string };
     y: { min?: number; max?: number; tick?: number; label?: string };
   } = {
     x: { min: -10, max: 80, tick: 10, label: "x [m]" },
-    y: { min: -10, max: 100, tick: 10, label: "y [m/s]" }
+    y: { min: -20, max: 100, tick: 10, label: "y [m/s]" }
   };
   return (
     <>
       <FigureBox>
-        <FigureContents
-          dataset={[dataset1, dataset2]}
-          range={range}
-        ></FigureContents>
+        <FigureContents dataset={[dataset1]} range={range}></FigureContents>
       </FigureBox>
     </>
   );

@@ -1,3 +1,5 @@
+import { LabelX, LabelY } from "./Label";
+
 type axisData = {
   value: string;
   posR: number;
@@ -93,23 +95,34 @@ export const VerticalGuide = (props: { data: axisData }) => {
   return <div style={{ ...defstyle }} />;
 };
 
-export const SetAxis = (props: { tickList: axisData[]; direction: string }) => {
-  const { tickList, direction } = props;
+export const SetAxis = (props: {
+  axis: { min: number; max: number; tick?: number; label?: string };
+  direction: string;
+}) => {
+  const { axis, direction } = props;
+  const tickList = makeTickList(axis);
+
   if (direction === "h") {
     return (
-      <div style={{ position: "relative", width: "100%", height: "100%" }}>
-        {tickList.map((item, index) => (
-          <HorizontalTick key={index} data={item} />
-        ))}
-      </div>
+      <>
+        <div style={{ position: "relative", width: "100%", height: "100%" }}>
+          {tickList.map((item, index) => (
+            <HorizontalTick key={index} data={item} />
+          ))}
+        </div>
+        <LabelX label={axis.label} />
+      </>
     );
   } else if (direction === "v") {
     return (
-      <div style={{ position: "relative", width: "100%", height: "100%" }}>
-        {tickList.map((item, index) => (
-          <VerticalTick key={index} data={item} />
-        ))}
-      </div>
+      <>
+        <LabelY label={axis.label} />
+        <div style={{ position: "relative", width: "100%", height: "100%" }}>
+          {tickList.map((item, index) => (
+            <VerticalTick key={index} data={item} />
+          ))}
+        </div>
+      </>
     );
   } else {
     return <div></div>;
@@ -117,10 +130,12 @@ export const SetAxis = (props: { tickList: axisData[]; direction: string }) => {
 };
 
 export const SetGuide = (props: {
-  tickList: axisData[];
+  axis: { min: number; max: number; tick?: number; label?: string };
   direction: string;
 }) => {
-  const { tickList, direction } = props;
+  const { axis, direction } = props;
+  const tickList = makeTickList(axis);
+
   if (direction === "h") {
     return (
       <>

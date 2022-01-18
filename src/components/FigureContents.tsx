@@ -1,18 +1,11 @@
 import { ScatterPlots, SetLegend } from "./ScatterPlot";
-import { SetAxis, SetGuide, makeTickList } from "./Axis";
+import { SetAxis, SetGuide } from "./Axis";
 import { pickDataRange } from "./DataRange";
 import styled from "styled-components";
 
 type position = {
   x: number;
   y: number;
-};
-
-type moddataset = {
-  data: params[];
-  name: string;
-  symbol: string;
-  color: string;
 };
 
 type legend = {
@@ -26,26 +19,14 @@ type dataset = {
   name: string;
   symbol: string;
   color: string;
+  index: string;
 };
 
-type params = {
-  pos: position /* 生データ */;
-  posR: position /* 窓上での相対座標*/;
-};
-
-type range = {
+type axis = {
   min: number;
   max: number;
-};
-
-type axis = range & {
   tick?: number;
   label?: string;
-};
-
-type axisData = {
-  value: string;
-  posR: number;
 };
 
 const Wrapper = styled.div`
@@ -86,29 +67,6 @@ const Space = styled.div`
   /* background-color: rgb(240, 240, 240); */
 `;
 
-const LabelX = styled.div`
-  text-align: center;
-  font-size: 0.8rem;
-  font-weight: bold;
-  color: rgb(100, 100, 100);
-`;
-
-const LabelY = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  white-space: nowrap;
-  top: 55%;
-  width: 1rem;
-  height: 1rem;
-  font-size: 0.8rem;
-  font-weight: bold;
-  color: rgb(100, 100, 100);
-  transform: rotate(-90deg);
-  transform-origin: 0 0;
-`;
-
 export const FigureContents = (props: {
   dataset: dataset[];
   range: {
@@ -130,27 +88,24 @@ export const FigureContents = (props: {
   const data = dataset.map((item) => item.data);
   const xrange = { min: range.x.min, max: range.x.max };
   const yrange = { min: range.y.min, max: range.y.max };
-  // 指定された範囲内におけるデータの最小値、最大値を計算
-  const axisRange = pickDataRange(data, xrange, yrange);
-  //指定された範囲をマージ
-  const xAxis: axis = { ...axisRange.x, ...range.x };
-  const yAxis: axis = { ...axisRange.y, ...range.y };
-
-  //表示位置を取得
-  const tickListX: axisData[] = makeTickList(xAxis);
-  const tickListY: axisData[] = makeTickList(yAxis);
   const listLegend: legend[] = dataset.map((value) => ({
     name: value.name,
     symbol: value.symbol,
     color: value.color
   }));
 
+  // 指定された範囲内におけるデータの最小値、最大値を計算
+  const axisRange = pickDataRange(data, xrange, yrange);
+  // プロット範囲
+  const xAxis: axis = { ...axisRange.x, ...range.x };
+  const yAxis: axis = { ...axisRange.y, ...range.y };
+
+  //プロットの大きさを軸に合わせて調整
   const dataRange = pickDataRange(data);
   const dWidth = dataRange.x.max - dataRange.x.min;
   const dHeight = dataRange.y.max - dataRange.y.min;
   const aWidth = xAxis.max - xAxis.min;
   const aHeight = yAxis.max - yAxis.min;
-  console.log(dataRange, dWidth, dHeight, aWidth, aHeight);
 
   const adjustPlot = {
     top: -((dataRange.y.max - yAxis.max) / aHeight) * 100 + "%",
@@ -158,25 +113,24 @@ export const FigureContents = (props: {
     width: (dWidth / aWidth) * 100 + "%",
     height: (dHeight / aHeight) * 100 + "%"
   };
+
   return (
     <>
       <SetLegend listLegend={listLegend} />
       <Wrapper>
         <VAxis>
-          <LabelY>{yAxis.label}</LabelY>
-          <SetAxis tickList={tickListY} direction="v" />
+          <SetAxis axis={yAxis} direction="v" />
         </VAxis>
         <PlotBox>
-          <SetGuide tickList={tickListX} direction="h" />
-          <SetGuide tickList={tickListY} direction="v" />
+          <SetGuide axis={xAxis} direction="h" />
+          <SetGuide axis={yAxis} direction="v" />
           <div style={{ position: "relative", ...adjustPlot }}>
             <ScatterPlots dataset={dataset} />
           </div>
         </PlotBox>
         <Space />
         <HAxis>
-          <SetAxis tickList={tickListX} direction="h" />
-          <LabelX>{xAxis.label}</LabelX>
+          <SetAxis axis={xAxis} direction="h" />
         </HAxis>
       </Wrapper>
     </>
