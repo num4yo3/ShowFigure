@@ -1,6 +1,5 @@
-import { ScatterPlots, SetLegend } from "./ScatterPlot";
-import { SetAxis, SetGuide } from "./Axis";
-import { pickDataRange } from "./DataRange";
+import { SetLegend } from "./SetLegend";
+import { SetAxis, SetGuide } from "./SetAxis";
 import styled from "styled-components";
 
 type position = {
@@ -20,13 +19,6 @@ type dataset = {
   symbol: string;
   color: string;
   index: string;
-};
-
-type axis = {
-  min: number;
-  max: number;
-  tick?: number;
-  label?: string;
 };
 
 const Wrapper = styled.div`
@@ -69,50 +61,31 @@ const Space = styled.div`
 
 export const FigureContents = (props: {
   dataset: dataset[];
-  range: {
+  axisRange: {
     x: {
-      min?: number;
-      max?: number;
+      min: number;
+      max: number;
       tick?: number;
       label?: string;
     };
     y: {
-      min?: number;
-      max?: number;
+      min: number;
+      max: number;
       tick?: number;
       label?: string;
     };
   };
+  children?: React.ReactNode;
 }) => {
-  const { dataset, range } = props;
-  const data = dataset.map((item) => item.data);
-  const xrange = { min: range.x.min, max: range.x.max };
-  const yrange = { min: range.y.min, max: range.y.max };
+  const { dataset, axisRange } = props;
   const listLegend: legend[] = dataset.map((value) => ({
     name: value.name,
     symbol: value.symbol,
     color: value.color
   }));
 
-  // 指定された範囲内におけるデータの最小値、最大値を計算
-  const axisRange = pickDataRange(data, xrange, yrange);
-  // プロット範囲
-  const xAxis: axis = { ...axisRange.x, ...range.x };
-  const yAxis: axis = { ...axisRange.y, ...range.y };
-
-  //プロットの大きさを軸に合わせて調整
-  const dataRange = pickDataRange(data);
-  const dWidth = dataRange.x.max - dataRange.x.min;
-  const dHeight = dataRange.y.max - dataRange.y.min;
-  const aWidth = xAxis.max - xAxis.min;
-  const aHeight = yAxis.max - yAxis.min;
-
-  const adjustPlot = {
-    top: -((dataRange.y.max - yAxis.max) / aHeight) * 100 + "%",
-    left: ((dataRange.x.min - xAxis.min) / aWidth) * 100 + "%",
-    width: (dWidth / aWidth) * 100 + "%",
-    height: (dHeight / aHeight) * 100 + "%"
-  };
+  const xAxis = axisRange.x;
+  const yAxis = axisRange.y;
 
   return (
     <>
@@ -124,9 +97,7 @@ export const FigureContents = (props: {
         <PlotBox>
           <SetGuide axis={xAxis} direction="h" />
           <SetGuide axis={yAxis} direction="v" />
-          <div style={{ position: "relative", ...adjustPlot }}>
-            <ScatterPlots dataset={dataset} />
-          </div>
+          {props.children}
         </PlotBox>
         <Space />
         <HAxis>

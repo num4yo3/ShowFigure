@@ -1,5 +1,7 @@
 import { FigureBox } from "./components/FigureBox";
 import { FigureContents } from "./components/FigureContents";
+import { makeAxisRange } from "./components/SetAxis";
+import moment from "moment";
 import { ScatterPlots } from "./components/ScatterPlot";
 
 type dataset = {
@@ -58,13 +60,19 @@ export default function App() {
     x: { min?: number; max?: number; tick?: number; label?: string };
     y: { min?: number; max?: number; tick?: number; label?: string };
   } = {
-    x: { min: -10, max: 80, tick: 10, label: "x [m]" },
-    y: { min: -20, max: 100, tick: 10, label: "y [m/s]" }
+    x: { min: -10, max: 80, tick: 10, label: "distance [m]" },
+    y: { max: 100, tick: 10, label: "velocity [m/s]" }
   };
+
+  const axisRange = makeAxisRange([data1, data2], range);
+  // const today = moment("2022-1-19");
+  // console.log(today.format("yy-MMM-DD(ddd)"));
   return (
     <>
       <FigureBox>
-        <FigureContents dataset={[dataset1]} range={range}></FigureContents>
+        <FigureContents dataset={[dataset1, dataset2]} axisRange={axisRange}>
+          <ScatterPlots dataset={[dataset1, dataset2]} range={axisRange} />
+        </FigureContents>
       </FigureBox>
     </>
   );

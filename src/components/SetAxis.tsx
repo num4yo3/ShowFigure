@@ -1,4 +1,5 @@
-import { LabelX, LabelY } from "./Label";
+import { LabelX, LabelY } from "./SetLabel";
+import { pickDataRange } from "./DataRange";
 
 type axisData = {
   value: string;
@@ -155,4 +156,35 @@ export const SetGuide = (props: {
   } else {
     return <div></div>;
   }
+};
+
+export const makeAxisRange = (
+  dataset: { x: number; y: number }[][],
+  range: {
+    x: {
+      min?: number;
+      max?: number;
+      tick?: number;
+      label?: string;
+    };
+    y: {
+      min?: number;
+      max?: number;
+      tick?: number;
+      label?: string;
+    };
+  }
+) => {
+  const xrange = { min: range.x.min, max: range.x.max };
+  const yrange = { min: range.y.min, max: range.y.max };
+  const pickedRange = pickDataRange(dataset, xrange, yrange);
+  // プロット範囲
+  const axisRange: {
+    x: { min: number; max: number };
+    y: { min: number; max: number };
+  } = {
+    x: { ...pickedRange.x, ...range.x },
+    y: { ...pickedRange.y, ...range.y }
+  };
+  return axisRange;
 };

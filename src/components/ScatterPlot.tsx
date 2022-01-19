@@ -1,4 +1,5 @@
 import { AddPosR, pickDataRange } from "./DataRange";
+import { Symbol } from "./MarkerList";
 
 type position = {
   x: number;
@@ -9,11 +10,6 @@ type params = {
   posR: position;
 };
 
-type legend = {
-  name: string;
-  symbol: string;
-  color: string;
-};
 type dataset = {
   data: position[];
   name: string;
@@ -28,77 +24,9 @@ type moddataset = {
   color: string;
 };
 
-const symbolList = {
-  circle: {
-    width: "100%",
-    height: "100%",
-    borderRadius: "50%"
-  },
-  square: {
-    width: "100%",
-    height: "100%"
-  }
-};
-
-const colorList = {
-  red: {
-    color: "rgb(255,0,0)",
-    backgroundColor: "rgba(255,0,0,0.6)",
-    outline: "solid 1px"
-  },
-  orange: {
-    color: "rgb(250,150,0)",
-    backgroundColor: "rgba(250,150,0,0.6)",
-    outline: "solid 1px"
-  },
-  yellow: {
-    color: "rgb(250,220,0)",
-    backgroundColor: "rgba(250,250,0,0.6)",
-    outline: "solid 1px"
-  },
-  green: {
-    color: "rgb(100,200,50)",
-    backgroundColor: "rgba(100,200,50,0.6)",
-    outline: "solid 1px"
-  },
-  blue: {
-    color: "rgb(0,0,255)",
-    backgroundColor: "rgba(0,0,255,0.6)",
-    outline: "solid 1px"
-  },
-  violet: {
-    color: "rgb(200,0,255)",
-    backgroundColor: "rgba(200,0,255,0.6)",
-    outline: "solid 1px"
-  }
-};
-
-const Symbol = (props: {
-  symbol: string;
-  color?: string;
-  translate?: boolean;
-}) => {
-  const { symbol, color, translate } = props;
-  const defStyle = symbolList[symbol];
-  const defColor = colorList[color];
-
-  return (
-    <div
-      style={{
-        width: "7px",
-        height: "7px",
-        transform: translate ? "translateX(-3px) translateY(4px)" : "none"
-      }}
-    >
-      <div style={{ ...defStyle, ...defColor }} />
-    </div>
-  );
-};
-Symbol.defaultProps = { translate: true };
-
 const Scatter = (props: { data: params; symbol: string; color: string }) => {
   const { data, symbol, color } = props;
-  const defaultStyle = {
+  const defaultStyle: { [key: string]: string } = {
     position: "absolute",
     left: data.posR.x * 100 + "%",
     bottom: data.posR.y * 100 + "%"
@@ -107,27 +35,6 @@ const Scatter = (props: { data: params; symbol: string; color: string }) => {
   return (
     <div style={{ ...defaultStyle }}>
       <Symbol symbol={symbol} color={color} />
-    </div>
-  );
-};
-
-const Legend = (props: { value: legend }) => {
-  const { value } = props;
-  const defaultStyle = {
-    display: "flex",
-    alignItems: "center",
-    fontSize: "0.7rem",
-    fontWeight: "bold",
-    padding: "0.1rem 0.5rem",
-    color: "rgb(100,100,100)"
-    // border: "solid 1px"
-  };
-  return (
-    <div style={{ ...defaultStyle }}>
-      <div style={{ margin: "0 0.4rem" }}>
-        <Symbol symbol={value.symbol} color={value.color} translate={false} />
-      </div>
-      {": " + value.name}
     </div>
   );
 };
@@ -145,30 +52,39 @@ export const Plot = (props: { dataset: moddataset }) => {
   );
 };
 
-export const ScatterPlots = (props: { dataset: dataset[] }) => {
-  const { dataset } = props;
-  const range = pickDataRange(dataset.map((item) => item.data));
+export const ScatterPlots = (props: {
+  dataset: dataset[];
+  range: { x: { min: number; max: number }; y: { min: number; max: number } };
+}) => {
+  const { dataset, range } = props;
+  const dataRange = pickDataRange(dataset.map((item) => item.data));
   const modData = dataset.map((item) => ({
-    data: AddPosR(item.data, range),
+    data: AddPosR(item.data, dataRange),
     name: item.name,
     symbol: item.symbol,
     color: item.color
   }));
 
+  const xAxis = range.x;
+  const yAxis = range.y;
+
+  //プロットの大きさを軸に合わせて調整
+  const dWidth = dataRange.x.max - dataRange.x.min;
+  const dHeight = dataRange.y.max - dataRange.y.min;
+  const aWidth = xAxis.max - xAxis.min;
+  const aHeight = yAxis.max - yAxis.min;
+
+  const adjustPlot = {
+    top: -((dataRange.y.max - yAxis.max) / aHeight) * 100 + "%",
+    left: ((dataRange.x.min - xAxis.min) / aWidth) * 100 + "%",
+    width: (dWidth / aWidth) * 100 + "%",
+    height: (dHeight / aHeight) * 100 + "%"
+  };
+
   return (
-    <>
+    <div style={{ position: "relative", ...adjustPlot }}>
       {modData.map((value, index) => (
         <Plot key={index} dataset={value} />
-      ))}
-    </>
-  );
-};
-export const SetLegend = (props: { listLegend: legend[] }) => {
-  const { listLegend } = props;
-  return (
-    <div style={{ display: "flex", padding: "4px" }}>
-      {listLegend.map((item, index) => (
-        <Legend key={index} value={item} />
       ))}
     </div>
   );
