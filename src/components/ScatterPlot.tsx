@@ -11,10 +11,13 @@ type params = {
 };
 
 type dataset = {
+  index: string;
   data: position[];
-  name: string;
-  symbol: string;
-  color: string;
+  legend: {
+    name: string;
+    symbol: string;
+    color: string;
+  };
 };
 
 type moddataset = {
@@ -60,9 +63,9 @@ export const ScatterPlots = (props: {
   const dataRange = pickDataRange(dataset.map((item) => item.data));
   const modData = dataset.map((item) => ({
     data: AddPosR(item.data, dataRange),
-    name: item.name,
-    symbol: item.symbol,
-    color: item.color
+    name: item.legend.name,
+    symbol: item.legend.symbol,
+    color: item.legend.color
   }));
 
   const xAxis = range.x;
@@ -82,10 +85,12 @@ export const ScatterPlots = (props: {
   };
 
   return (
-    <div style={{ position: "relative", ...adjustPlot }}>
-      {modData.map((value, index) => (
-        <Plot key={index} dataset={value} />
-      ))}
+    <div style={{ position: "absolute", width: "100%", height: "100%" }}>
+      <div style={{ position: "relative", ...adjustPlot }}>
+        {modData.map((value, index) => (
+          <Plot key={index} dataset={value} />
+        ))}
+      </div>
     </div>
   );
 };

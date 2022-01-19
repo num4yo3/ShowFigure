@@ -66,3 +66,60 @@ export const Symbol = (props: {
 };
 // Symbol引数の初期値を設定
 Symbol.defaultProps = { symbol: "circle", color: "red", translate: true };
+
+export const Circle = (props: { color: string }) => {
+  const { color } = props;
+  const defcolor = colorList[color].color;
+  const defbgcolor = colorList[color].backgroundColor;
+  return (
+    <svg viewBox="0 0 100 100">
+      <circle
+        cx="50"
+        cy="50"
+        r="40"
+        stroke={defcolor}
+        stroke-width="10"
+        fill={defbgcolor}
+      />
+    </svg>
+  );
+};
+
+export const Square = (props: { color: string }) => {
+  const { color } = props;
+  const defcolor = colorList[color].color;
+  const defbgcolor = colorList[color].backgroundColor;
+  return (
+    <svg viewBox="0 0 100 100">
+      <rect
+        x="13"
+        y="13"
+        width="74"
+        height="74"
+        style={{
+          fill: defbgcolor,
+          stroke: defcolor,
+          strokeWidth: 10
+        }}
+      />
+    </svg>
+  );
+};
+
+export const Triangle = (props: { color: string }) => {
+  const { color } = props;
+  const defcolor = colorList[color].color;
+  const defbgcolor = colorList[color].backgroundColor;
+  return (
+    <svg viewBox="0 0 100 100">
+      <polygon
+        points="50,10 90,80 10,80"
+        style={{
+          fill: defbgcolor,
+          stroke: defcolor,
+          strokeWidth: 10
+        }}
+      />
+    </svg>
+  );
+};

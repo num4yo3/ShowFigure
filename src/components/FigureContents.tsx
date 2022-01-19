@@ -2,23 +2,10 @@ import { SetLegend } from "./SetLegend";
 import { SetAxis, SetGuide } from "./SetAxis";
 import styled from "styled-components";
 
-type position = {
-  x: number;
-  y: number;
-};
-
 type legend = {
   name: string;
   symbol: string;
   color: string;
-};
-
-type dataset = {
-  data: position[];
-  name: string;
-  symbol: string;
-  color: string;
-  index: string;
 };
 
 const Wrapper = styled.div`
@@ -37,6 +24,7 @@ const VAxis = styled.div`
   height: 85%;
   /* background-color: rgb(240, 240, 240); */
 `;
+
 const HAxis = styled.div`
   /* display: flex; */
   width: 90%;
@@ -60,7 +48,7 @@ const Space = styled.div`
 `;
 
 export const FigureContents = (props: {
-  dataset: dataset[];
+  legendList: legend[];
   axisRange: {
     x: {
       min: number;
@@ -77,19 +65,14 @@ export const FigureContents = (props: {
   };
   children?: React.ReactNode;
 }) => {
-  const { dataset, axisRange } = props;
-  const listLegend: legend[] = dataset.map((value) => ({
-    name: value.name,
-    symbol: value.symbol,
-    color: value.color
-  }));
+  const { legendList, axisRange } = props;
 
   const xAxis = axisRange.x;
   const yAxis = axisRange.y;
 
   return (
     <>
-      <SetLegend listLegend={listLegend} />
+      <SetLegend listLegend={legendList} />
       <Wrapper>
         <VAxis>
           <SetAxis axis={yAxis} direction="v" />
