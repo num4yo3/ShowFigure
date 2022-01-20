@@ -9,7 +9,7 @@ const boxStyleDefault = {
 };
 
 export const FigureBox = (props) => {
-  const title = "Sample Plot";
+  const title = "どういうこっちゃ";
   return (
     <div style={{ ...boxStyleDefault }}>
       <div style={{ width: "100%", textAlign: "center" }}>{title}</div>
