@@ -1,8 +1,9 @@
 import { FigureBox } from "./components/FigureBox";
 import { FigureContents } from "./components/FigureContents";
-import { makeAxisRange } from "./components/SetAxis";
+// import { makeAxisRange } from "./components/SetAxis";
 // import moment from "moment";
 import { ScatterPlots } from "./components/ScatterPlot";
+import { Candle } from "./components/Candle";
 
 type dataset = {
   index: string;
@@ -81,13 +82,13 @@ export default function App() {
     }
   };
 
-  const range: {
-    x: { min?: number; max?: number; tick?: number; label?: string };
-    y: { min?: number; max?: number; tick?: number; label?: string };
-  } = {
-    x: { min: -10, max: 80, tick: 10, label: "distance [m]" },
-    y: { max: 150, tick: 20, label: "velocity [m/s]" }
-  };
+  // const range: {
+  //   x: { min?: number; max?: number; tick?: number; label?: string };
+  //   y: { min?: number; max?: number; tick?: number; label?: string };
+  // } = {
+  //   x: { min: -10, max: 80, tick: 10, label: "distance [m]" },
+  //   y: { max: 150, tick: 20, label: "velocity [m/s]" }
+  // };
 
   // const axisRange = makeAxisRange([data1, data2, data3], range);
   const axisRange = {
@@ -108,6 +109,10 @@ export default function App() {
           <ScatterPlots dataset={[dataset3]} range={axisRange} />
         </FigureContents>
       </FigureBox>
+      <Candle
+        data={{ Open: 60, High: 100, Low: 0, Close: 70, Volume: 1200 }}
+        colorType={0}
+      />
     </>
   );
 }
