@@ -4,6 +4,7 @@ import { FigureContents } from "./components/FigureContents";
 // import moment from "moment";
 import { ScatterPlots } from "./components/ScatterPlot";
 import { Candle } from "./components/Candle";
+import { DataRange, CandleChart } from "./components/CandleChart";
 
 type dataset = {
   index: string;
@@ -82,6 +83,15 @@ export default function App() {
     }
   };
 
+  const data4 = [
+    { Date: 1, Open: 10, High: 40, Low: 2, Close: 23, Volume: 1000 },
+    { Date: 2, Open: 25, High: 45, Low: 12, Close: 34, Volume: 1000 },
+    { Date: 3, Open: 23, High: 42, Low: 21, Close: 38, Volume: 1000 },
+    { Date: 4, Open: 41, High: 56, Low: 35, Close: 37, Volume: 1000 },
+    { Date: 5, Open: 38, High: 43, Low: 30, Close: 31, Volume: 1000 },
+    { Date: 6, Open: 43, High: 49, Low: 30, Close: 43, Volume: 1000 },
+    { Date: 7, Open: 41, High: 53, Low: 23, Close: 25, Volume: 1000 }
+  ];
   // const range: {
   //   x: { min?: number; max?: number; tick?: number; label?: string };
   //   y: { min?: number; max?: number; tick?: number; label?: string };
@@ -89,30 +99,23 @@ export default function App() {
   //   x: { min: -10, max: 80, tick: 10, label: "distance [m]" },
   //   y: { max: 150, tick: 20, label: "velocity [m/s]" }
   // };
-
+  const dada = DataRange(data4);
+  console.log(dada);
   // const axisRange = makeAxisRange([data1, data2, data3], range);
   const axisRange = {
-    x: { min: 0, max: 100, tick: 10, label: "どないやねん" },
-    y: { min: 0, max: 100, tick: 10, label: "なんでやねん" }
+    x: { min: 0, max: 10, tick: 1, label: " x axis [unit]" },
+    y: { min: 0, max: 60, tick: 10, label: "y axis [unit]" }
   };
   // const today = moment("2022-1-19");
   // console.log(today.format("yy-MMM-DD(ddd)"));
   return (
     <>
       <FigureBox>
-        <FigureContents
-          legendList={[dataset1.legend, dataset2.legend, dataset3.legend]}
-          axisRange={axisRange}
-        >
-          <ScatterPlots dataset={[dataset1]} range={axisRange} />
-          <ScatterPlots dataset={[dataset2]} range={axisRange} />
-          <ScatterPlots dataset={[dataset3]} range={axisRange} />
+        <FigureContents legendList={[dataset1.legend]} axisRange={axisRange}>
+          {/* <ScatterPlots dataset={[dataset1]} range={axisRange} /> */}
+          <CandleChart dataset={data4} range={axisRange} />
         </FigureContents>
       </FigureBox>
-      <Candle
-        data={{ Open: 60, High: 100, Low: 0, Close: 70, Volume: 1200 }}
-        colorType={0}
-      />
     </>
   );
 }
