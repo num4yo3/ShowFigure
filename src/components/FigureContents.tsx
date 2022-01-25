@@ -36,7 +36,7 @@ const PlotBox = styled.div`
   position: relative;
   width: 89%;
   height: 84%;
-  overflow: hidden;
+  /* overflow: hidden; */
   padding: 0px;
   outline: solid 1px rgba(0, 0, 0, 0.5);
 `;

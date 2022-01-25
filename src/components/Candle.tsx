@@ -1,5 +1,5 @@
 type candle = {
-  Date: number;
+  Date: string;
   Open: number;
   High: number;
   Low: number;
@@ -9,6 +9,8 @@ type candle = {
 type position = {
   x: number;
   y: number;
+  xsize: number;
+  ysize: number;
 };
 
 //箱ひげ図をプロット。横幅と縦幅は呼び出し元のboxsizeに依存
@@ -17,10 +19,16 @@ export const Candle = (props: { data: candle; colorType: number }) => {
   const totalHeight = Math.abs(data.High - data.Low);
   const candleHeight = Math.abs(data.Open - data.Close);
   const upDown = data.Open < data.Close ? true : false;
+  const upperBar = upDown
+    ? ((data.High - data.Close) / totalHeight) * 100
+    : ((data.High - data.Open) / totalHeight) * 100;
+  const lowerBar = upDown
+    ? ((data.Open - data.Low) / totalHeight) * 100
+    : ((data.Close - data.Low) / totalHeight) * 100;
   const defColor = [
     {
-      up: "red",
-      down: "blue",
+      up: "rgba(255,0,0,0.6)",
+      down: "rgba(0,0,255,0.6)",
       upBorder: "red",
       downBorder: "blue",
       evenBorder: "green"
@@ -38,19 +46,13 @@ export const Candle = (props: { data: candle; colorType: number }) => {
   const borderColor = upDown ? setColor.upBorder : setColor.downBorder;
 
   return (
-    <div
-      style={{
-        position: "relative",
-        width: "100%",
-        height: "100%"
-      }}
-    >
+    <>
       <div
         style={{
           position: "absolute",
-          left: "43%",
-          width: "14%",
-          height: totalHeight + "%",
+          left: "47%",
+          width: "6%",
+          height: upperBar + "%",
           backgroundColor:
             data.Open !== data.Close ? borderColor : setColor.evenBorder
         }}
@@ -58,19 +60,30 @@ export const Candle = (props: { data: candle; colorType: number }) => {
       <div
         style={{
           position: "absolute",
-          left: "0%",
-          top: upDown
-            ? data.High - data.Close + "%"
-            : data.High - data.Open + "%",
-          width: "100%",
-          height: candleHeight + "%",
+          left: "25%",
+          top: upperBar + "%",
+          width: "50%",
+          height: (candleHeight / totalHeight) * 100 + "%",
           backgroundColor: color,
           outline:
             "solid 1px " +
             (data.Open !== data.Close ? borderColor : setColor.evenBorder)
         }}
       />
-    </div>
+      <div
+        style={{
+          position: "absolute",
+          top: upDown
+            ? ((data.High - data.Open) / totalHeight) * 100 + "%"
+            : ((data.High - data.Close) / totalHeight) * 100 + "%",
+          left: "47%",
+          width: "6%",
+          height: lowerBar + "%",
+          backgroundColor:
+            data.Open !== data.Close ? borderColor : setColor.evenBorder
+        }}
+      />
+    </>
   );
 };
 
@@ -79,21 +92,20 @@ export const PlotCandle = (props: {
   colorType: number;
 }) => {
   const { dataset, colorType } = props;
-  const xsizeUnit = 100 / dataset.length;
-  const ysizeUnit = 100;
   return (
     <>
-      {dataset.map((item) => (
+      {dataset.map((item, index) => (
         <div
+          key={index}
           style={{
             position: "absolute",
-            top: (1 - item.posR.y) * 100 + "%",
-            left: item.posR.x * 100 - xsizeUnit / 2 + "%",
-            width: xsizeUnit + "%",
-            height: ysizeUnit + "%"
+            top: item.posR.y * 100 + "%",
+            left: (item.posR.x - item.posR.xsize / 2) * 100 + "%",
+            width: item.posR.xsize * 100 + "%",
+            height: item.posR.ysize * 100 + "%"
           }}
         >
-          <Candle data={item.data} colorType={colorType} />
+          <Candle key={index} data={item.data} colorType={colorType} />
         </div>
       ))}
     </>

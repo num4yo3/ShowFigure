@@ -1,10 +1,9 @@
 import { FigureBox } from "./components/FigureBox";
 import { FigureContents } from "./components/FigureContents";
 // import { makeAxisRange } from "./components/SetAxis";
-// import moment from "moment";
+import moment from "moment";
 import { ScatterPlots } from "./components/ScatterPlot";
-import { Candle } from "./components/Candle";
-import { DataRange, CandleChart } from "./components/CandleChart";
+import { CandleChart } from "./components/CandleChart";
 
 type dataset = {
   index: string;
@@ -84,13 +83,313 @@ export default function App() {
   };
 
   const data4 = [
-    { Date: 1, Open: 10, High: 40, Low: 2, Close: 23, Volume: 1000 },
-    { Date: 2, Open: 25, High: 45, Low: 12, Close: 34, Volume: 1000 },
-    { Date: 3, Open: 23, High: 42, Low: 21, Close: 38, Volume: 1000 },
-    { Date: 4, Open: 41, High: 56, Low: 35, Close: 37, Volume: 1000 },
-    { Date: 5, Open: 38, High: 43, Low: 30, Close: 31, Volume: 1000 },
-    { Date: 6, Open: 43, High: 49, Low: 30, Close: 43, Volume: 1000 },
-    { Date: 7, Open: 41, High: 53, Low: 23, Close: 25, Volume: 1000 }
+    { Date: "2022-01-04", Open: 10, High: 40, Low: 4, Close: 20, Volume: 1000 },
+    {
+      Date: "2022-01-05",
+      Open: 25,
+      High: 45,
+      Low: 12,
+      Close: 34,
+      Volume: 1000
+    },
+    {
+      Date: "2022-01-06",
+      Open: 23,
+      High: 42,
+      Low: 21,
+      Close: 38,
+      Volume: 1000
+    },
+    {
+      Date: "2022-01-07",
+      Open: 41,
+      High: 54,
+      Low: 35,
+      Close: 37,
+      Volume: 1000
+    },
+    {
+      Date: "2022-01-11",
+      Open: 38,
+      High: 43,
+      Low: 30,
+      Close: 31,
+      Volume: 1000
+    },
+    {
+      Date: "2022-01-12",
+      Open: 43,
+      High: 49,
+      Low: 30,
+      Close: 43,
+      Volume: 1000
+    },
+    {
+      Date: "2022-01-13",
+      Open: 41,
+      High: 53,
+      Low: 23,
+      Close: 25,
+      Volume: 1000
+    },
+    {
+      Date: "2022-01-14",
+      Open: 31,
+      High: 43,
+      Low: 19,
+      Close: 22,
+      Volume: 1000
+    },
+    {
+      Date: "2022-01-17",
+      Open: 29,
+      High: 40,
+      Low: 23,
+      Close: 38,
+      Volume: 1000
+    },
+    {
+      Date: "2022-01-18",
+      Open: 44,
+      High: 63,
+      Low: 44,
+      Close: 61,
+      Volume: 1000
+    },
+    {
+      Date: "2022-01-19",
+      Open: 68,
+      High: 78,
+      Low: 65,
+      Close: 76,
+      Volume: 1000
+    },
+    {
+      Date: "2022-01-20",
+      Open: 68,
+      High: 79,
+      Low: 68,
+      Close: 72,
+      Volume: 1000
+    },
+    {
+      Date: "2022-01-21",
+      Open: 79,
+      High: 86,
+      Low: 64,
+      Close: 71,
+      Volume: 1000
+    },
+    {
+      Date: "2022-01-24",
+      Open: 68,
+      High: 79,
+      Low: 57,
+      Close: 65,
+      Volume: 1000
+    },
+    {
+      Date: "2022-01-25",
+      Open: 67,
+      High: 71,
+      Low: 52,
+      Close: 68,
+      Volume: 1000
+    },
+    {
+      Date: "2022-01-26",
+      Open: 65,
+      High: 73,
+      Low: 59,
+      Close: 72,
+      Volume: 1000
+    },
+    {
+      Date: "2022-01-27",
+      Open: 75,
+      High: 80,
+      Low: 52,
+      Close: 61,
+      Volume: 1000
+    },
+    {
+      Date: "2022-01-28",
+      Open: 61,
+      High: 67,
+      Low: 57,
+      Close: 62,
+      Volume: 1000
+    },
+    {
+      Date: "2022-01-31",
+      Open: 62,
+      High: 63,
+      Low: 51,
+      Close: 57,
+      Volume: 1000
+    },
+    {
+      Date: "2022-02-01",
+      Open: 59,
+      High: 74,
+      Low: 54,
+      Close: 59,
+      Volume: 1000
+    },
+    {
+      Date: "2022-02-02",
+      Open: 56,
+      High: 57,
+      Low: 40,
+      Close: 45,
+      Volume: 1000
+    },
+    {
+      Date: "2022-02-03",
+      Open: 51,
+      High: 61,
+      Low: 46,
+      Close: 58,
+      Volume: 1000
+    },
+    {
+      Date: "2022-02-04",
+      Open: 49,
+      High: 71,
+      Low: 49,
+      Close: 60,
+      Volume: 1000
+    },
+    {
+      Date: "2022-02-07",
+      Open: 65,
+      High: 69,
+      Low: 56,
+      Close: 57,
+      Volume: 1000
+    },
+    {
+      Date: "2022-02-08",
+      Open: 59,
+      High: 69,
+      Low: 41,
+      Close: 43,
+      Volume: 1000
+    },
+    {
+      Date: "2022-02-09",
+      Open: 45,
+      High: 53,
+      Low: 38,
+      Close: 46,
+      Volume: 1000
+    },
+    {
+      Date: "2022-02-10",
+      Open: 47,
+      High: 50,
+      Low: 40,
+      Close: 41,
+      Volume: 1000
+    },
+    {
+      Date: "2022-02-14",
+      Open: 37,
+      High: 37,
+      Low: 31,
+      Close: 32,
+      Volume: 1000
+    },
+    {
+      Date: "2022-02-15",
+      Open: 30,
+      High: 30,
+      Low: 23,
+      Close: 26,
+      Volume: 1000
+    },
+    {
+      Date: "2022-02-16",
+      Open: 12,
+      High: 23,
+      Low: 11,
+      Close: 14,
+      Volume: 1000
+    },
+    {
+      Date: "2022-02-17",
+      Open: 21,
+      High: 23,
+      Low: 15,
+      Close: 19,
+      Volume: 1000
+    },
+    {
+      Date: "2022-02-18",
+      Open: 26,
+      High: 27,
+      Low: 19,
+      Close: 26,
+      Volume: 1000
+    },
+    {
+      Date: "2022-02-21",
+      Open: 21,
+      High: 33,
+      Low: 20,
+      Close: 22,
+      Volume: 1000
+    },
+    {
+      Date: "2022-02-22",
+      Open: 21,
+      High: 28,
+      Low: 16,
+      Close: 24,
+      Volume: 1000
+    },
+    {
+      Date: "2022-02-24",
+      Open: 24,
+      High: 25,
+      Low: 13,
+      Close: 15,
+      Volume: 1000
+    },
+    { Date: "2022-02-25", Open: 22, High: 24, Low: 4, Close: 21, Volume: 1000 },
+    {
+      Date: "2022-02-28",
+      Open: 36,
+      High: 42,
+      Low: 33,
+      Close: 41,
+      Volume: 1000
+    },
+    {
+      Date: "2022-03-01",
+      Open: 41,
+      High: 43,
+      Low: 40,
+      Close: 41,
+      Volume: 1000
+    },
+    {
+      Date: "2022-03-02",
+      Open: 44,
+      High: 53,
+      Low: 44,
+      Close: 49,
+      Volume: 1000
+    },
+    {
+      Date: "2022-03-03",
+      Open: 43,
+      High: 50,
+      Low: 41,
+      Close: 44,
+      Volume: 1000
+    },
+    { Date: "2022-03-04", Open: 43, High: 47, Low: 38, Close: 45, Volume: 1000 }
   ];
   // const range: {
   //   x: { min?: number; max?: number; tick?: number; label?: string };
@@ -99,19 +398,19 @@ export default function App() {
   //   x: { min: -10, max: 80, tick: 10, label: "distance [m]" },
   //   y: { max: 150, tick: 20, label: "velocity [m/s]" }
   // };
-  const dada = DataRange(data4);
-  console.log(dada);
   // const axisRange = makeAxisRange([data1, data2, data3], range);
   const axisRange = {
-    x: { min: 0, max: 10, tick: 1, label: " x axis [unit]" },
-    y: { min: 0, max: 60, tick: 10, label: "y axis [unit]" }
+    x: {
+      duration: 40,
+      tick: 10,
+      label: " x axis [unit]"
+    },
+    y: { min: 0, max: 100, tick: 10, label: "y axis [unit]" }
   };
-  // const today = moment("2022-1-19");
-  // console.log(today.format("yy-MMM-DD(ddd)"));
   return (
     <>
       <FigureBox>
-        <FigureContents legendList={[dataset1.legend]} axisRange={axisRange}>
+        <FigureContents legendList={[]} axisRange={axisRange}>
           {/* <ScatterPlots dataset={[dataset1]} range={axisRange} /> */}
           <CandleChart dataset={data4} range={axisRange} />
         </FigureContents>
