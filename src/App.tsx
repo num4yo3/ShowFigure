@@ -1,9 +1,11 @@
 import { FigureBox } from "./components/FigureBox";
-import { FigureContents } from "./components/FigureContents";
+import {
+  FigureContents,
+  CandleChartComponent
+} from "./components/FigureContents";
 // import { makeAxisRange } from "./components/SetAxis";
 import moment from "moment";
 import { ScatterPlots } from "./components/ScatterPlot";
-import { CandleChart } from "./components/CandleChart";
 
 type dataset = {
   index: string;
@@ -401,19 +403,20 @@ export default function App() {
   // const axisRange = makeAxisRange([data1, data2, data3], range);
   const axisRange = {
     x: {
-      duration: 40,
+      duration: 35,
       tick: 10,
-      label: " x axis [unit]"
+      label: ""
     },
-    y: { min: 0, max: 100, tick: 10, label: "y axis [unit]" }
+    y: { min: 0, max: 100, tick: 10, label: "" }
   };
   return (
     <>
       <FigureBox>
-        <FigureContents legendList={[]} axisRange={axisRange}>
-          {/* <ScatterPlots dataset={[dataset1]} range={axisRange} /> */}
-          <CandleChart dataset={data4} range={axisRange} />
-        </FigureContents>
+        <CandleChartComponent
+          dataset={data4}
+          axisRange={axisRange}
+          legendList={[]}
+        />
       </FigureBox>
     </>
   );

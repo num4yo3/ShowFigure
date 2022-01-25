@@ -1,5 +1,6 @@
 import { PlotCandle } from "./Candle";
 import moment from "moment";
+import { HorizontalGuide } from "./SetAxis";
 type position = { x: number; y: number; xsize: number; ysize: number };
 
 type candle = {
@@ -68,6 +69,46 @@ export const HorizontalTickForDate = (props: {
   return <div style={{ ...defstyle }}>{moment(data.value).format(format)}</div>;
 };
 
+export const SetAxisForDate = (props: {
+  tickList: { value: string; posR: number }[];
+  format?: string;
+  rotate?: number;
+  offset: { top: string; right: string; width: string; height: string };
+}) => {
+  const { tickList, format, rotate, offset } = props;
+  return (
+    <div style={{ position: "relative", ...offset }}>
+      {tickList.map((item, index) => (
+        <HorizontalTickForDate
+          key={index}
+          data={item}
+          format={format ? format : "'YY MMM DD"}
+          rotate={rotate}
+        />
+      ))}
+    </div>
+  );
+};
+export const SetGuideForDate = (props: {
+  tickList: { value: string; posR: number }[];
+  offset: { top: string; right: string; width: string; height: string };
+}) => {
+  const { tickList, offset } = props;
+  const tickstyle = {
+    right: offset.right,
+    width: offset.width,
+    height: "100%"
+  };
+  return (
+    <div style={{ position: "absolute", width: "100%", height: "100%" }}>
+      <div style={{ position: "relative", ...tickstyle }}>
+        {tickList.map((item, index) => (
+          <HorizontalGuide key={index} data={item} />
+        ))}
+      </div>
+    </div>
+  );
+};
 export const DataRange = (data: data[]) => {
   const xmax = Math.max(
     ...data.map((item) => Number(moment(item.Date).format("X")))
@@ -99,54 +140,18 @@ export const AddPosR = (data: data[], range: range, spacer?: number) => {
 };
 
 export const CandleChart = (props: {
-  dataset: data[];
-  range: {
-    x: { duration: number; tick?: number; label?: string };
-    y: { min: number; max: number; tick: number; label: string };
-  };
+  dataset: { data: candle; posR: position }[];
+  offset: { top: string; right: string; width: string; height: string };
 }) => {
-  const { dataset, range } = props;
-  const dataRange: range = DataRange(dataset);
-  const modData: { data: candle; posR: position }[] = AddPosR(
-    dataset,
-    dataRange
-  );
-  const yAxis = range.y;
-
-  // プロットの大きさを軸に合わせて調整;
-  const dWidth = dataset.length;
-  const dHeight = dataRange.y.max - dataRange.y.min;
-  const aWidth = range.x.duration;
-  const aHeight = yAxis.max - yAxis.min;
-  const adjustPlot = {
-    top: -((dataRange.y.max - yAxis.max) / aHeight) * 100 + "%",
-    right: (dWidth / aWidth - 1) * 75 + "%",
-    width: (dWidth / (aWidth * 1.25)) * 100 + "%",
-    height: (dHeight / aHeight) * 100 + "%"
-  };
-  const tickList = makeTickListCandle({ dataset: dataset, tick: range.x.tick });
+  const { dataset, offset } = props;
 
   return (
-    <div
-      style={{
-        position: "absolute",
-        width: "100%",
-        height: "100%"
-        // overflow: "hidden"
-      }}
-    >
-      <div style={{ position: "relative", ...adjustPlot }}>
-        <PlotCandle dataset={modData} colorType={0} />
-        <div style={{ position: "relative", display: "flex", top: "107%" }}>
-          {tickList.map((item, index) => (
-            <HorizontalTickForDate
-              key={index}
-              data={item}
-              format="'YY MMM DD"
-              rotate={-70}
-            />
-          ))}
-        </div>
+    <div style={{ position: "absolute", width: "100%", height: "100%" }}>
+      <div style={{ position: "relative", ...offset }}>
+        <PlotCandle dataset={dataset} colorType={0} />
+        <div
+          style={{ position: "relative", display: "flex", top: "107%" }}
+        ></div>
       </div>
     </div>
   );
