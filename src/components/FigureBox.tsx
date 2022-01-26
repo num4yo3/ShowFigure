@@ -13,7 +13,7 @@ export const FigureBox = (props) => {
   return (
     <div style={{ ...boxStyleDefault }}>
       <div style={{ width: "100%", textAlign: "center" }}>{title}</div>
-      {props.children}
+      <div style={{ width: "90%", height: "90%" }}>{props.children}</div>
     </div>
   );
 };

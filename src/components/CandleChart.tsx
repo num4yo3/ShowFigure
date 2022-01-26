@@ -21,11 +21,11 @@ type data = {
   Volume: number;
 };
 type range = {
-  x: { min: number; max: number };
-  y: { min: number; max: number };
+  min: number;
+  max: number;
 };
 
-export const makeTickListCandle = (props: {
+export const makeTickListForDate = (props: {
   dataset: data[];
   tick?: number;
 }) => {
@@ -91,13 +91,20 @@ export const SetAxisForDate = (props: {
 };
 export const SetGuideForDate = (props: {
   tickList: { value: string; posR: number }[];
-  offset: { top: string; right: string; width: string; height: string };
+  offset: {
+    top: string;
+    right: string;
+    width: string;
+    height: string;
+    transform: string;
+  };
 }) => {
   const { tickList, offset } = props;
   const tickstyle = {
     right: offset.right,
     width: offset.width,
-    height: "100%"
+    height: "100%",
+    transform: offset.transform
   };
   return (
     <div style={{ position: "absolute", width: "100%", height: "100%" }}>
@@ -109,27 +116,21 @@ export const SetGuideForDate = (props: {
     </div>
   );
 };
-export const DataRange = (data: data[]) => {
-  const xmax = Math.max(
-    ...data.map((item) => Number(moment(item.Date).format("X")))
-  );
-  const xmin = Math.min(
-    ...data.map((item) => Number(moment(item.Date).format("X")))
-  );
+export const DataRangeY = (data: data[]) => {
   const ymax = Math.max(...data.map((item) => item.High));
   const ymin = Math.min(...data.map((item) => item.Low));
-  return { x: { min: xmin, max: xmax }, y: { min: ymin, max: ymax } };
+  return { min: ymin, max: ymax };
 };
 
-export const AddPosR = (data: data[], range: range, spacer?: number) => {
+export const AddPosR = (data: data[], range: range) => {
   const xWidth: number = data.length;
-  const yWidth: number = range.y.max - range.y.min;
+  const yWidth: number = range.max - range.min;
   const modData: { data: candle; posR: position }[] = data.map(
     (item, index) => ({
       data: item,
       posR: {
         x: index / xWidth,
-        y: 1 - (item.High - range.y.min) / yWidth,
+        y: 1 - (item.High - range.min) / yWidth,
         xsize: 1 / xWidth,
         ysize: (item.High - item.Low) / yWidth
       }
@@ -148,7 +149,7 @@ export const CandleChart = (props: {
   return (
     <div style={{ position: "absolute", width: "100%", height: "100%" }}>
       <div style={{ position: "relative", ...offset }}>
-        <PlotCandle dataset={dataset} colorType={0} />
+        <PlotCandle dataset={dataset} colorType={1} />
         <div
           style={{ position: "relative", display: "flex", top: "107%" }}
         ></div>

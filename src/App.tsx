@@ -1,8 +1,5 @@
 import { FigureBox } from "./components/FigureBox";
-import {
-  FigureContents,
-  CandleChartComponent
-} from "./components/FigureContents";
+import { CandleChartComponent } from "./components/CandleChartComponent";
 // import { makeAxisRange } from "./components/SetAxis";
 import moment from "moment";
 import { ScatterPlots } from "./components/ScatterPlot";
@@ -391,7 +388,87 @@ export default function App() {
       Close: 44,
       Volume: 1000
     },
-    { Date: "2022-03-04", Open: 43, High: 47, Low: 38, Close: 45, Volume: 1000 }
+    {
+      Date: "2022-03-04",
+      Open: 43,
+      High: 47,
+      Low: 38,
+      Close: 45,
+      Volume: 1000
+    },
+    {
+      Date: "2022-03-07",
+      Open: 47,
+      High: 54,
+      Low: 32,
+      Close: 48,
+      Volume: 1000
+    },
+    {
+      Date: "2022-03-08",
+      Open: 49,
+      High: 50,
+      Low: 31,
+      Close: 39,
+      Volume: 1000
+    },
+    {
+      Date: "2022-03-09",
+      Open: 43,
+      High: 58,
+      Low: 38,
+      Close: 57,
+      Volume: 1000
+    },
+    {
+      Date: "2022-03-10",
+      Open: 61,
+      High: 69,
+      Low: 61,
+      Close: 68,
+      Volume: 1000
+    },
+    {
+      Date: "2022-03-11",
+      Open: 71,
+      High: 77,
+      Low: 69,
+      Close: 76,
+      Volume: 1000
+    },
+    {
+      Date: "2022-03-14",
+      Open: 82,
+      High: 82,
+      Low: 75,
+      Close: 78,
+      Volume: 1000
+    },
+    {
+      Date: "2022-03-15",
+      Open: 76,
+      High: 86,
+      Low: 74,
+      Close: 72,
+      Volume: 1000
+    },
+    {
+      Date: "2022-03-16",
+      Open: 68,
+      High: 76,
+      Low: 61,
+      Close: 68,
+      Volume: 1000
+    },
+    {
+      Date: "2022-03-17",
+      Open: 69,
+      High: 74,
+      Low: 66,
+      Close: 72,
+      Volume: 1000
+    },
+    { Date: "2022-03-18", Open: 71, High: 79, Low: 59, Close: 71, Volume: 1000 }
   ];
   // const range: {
   //   x: { min?: number; max?: number; tick?: number; label?: string };
@@ -403,7 +480,7 @@ export default function App() {
   // const axisRange = makeAxisRange([data1, data2, data3], range);
   const axisRange = {
     x: {
-      duration: 35,
+      duration: 50,
       tick: 10,
       label: ""
     },
