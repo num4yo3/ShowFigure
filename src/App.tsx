@@ -489,11 +489,7 @@ export default function App() {
   return (
     <>
       <FigureBox>
-        <CandleChartComponent
-          dataset={data4}
-          axisRange={axisRange}
-          legendList={[]}
-        />
+        <CandleChartComponent dataset={data4} axisRange={axisRange} />
       </FigureBox>
     </>
   );

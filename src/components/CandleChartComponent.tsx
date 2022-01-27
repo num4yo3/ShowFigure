@@ -25,6 +25,22 @@ type range = {
   max: number;
 };
 
+export const setPlotStyle = (dataRange, axisRange, offset) => {
+  const dWidth = dataRange.x.duration;
+  const dHeight = dataRange.y.max - dataRange.y.min;
+  const aWidth = axisRange.x.duration;
+  const aHeight = axisRange.y.max - axisRange.y.min;
+
+  const style = {
+    top: -((dataRange.y.max - axisRange.y.max) / aHeight) * 100 + "%",
+    right: (dWidth / aWidth - 1) * offset * 100 + "%",
+    width: (dWidth / aWidth) * offset * 100 + "%",
+    height: (dHeight / aHeight) * 100 + "%",
+    transform: `translateX(0%) translateY(0%)`
+  };
+  return style;
+};
+
 export const CandleChartComponent = (props: {
   dataset: candle[];
   axisRange: {
@@ -40,22 +56,24 @@ export const CandleChartComponent = (props: {
     dataset: dataset,
     tick: axisRange.x.tick
   });
-  const dataRangeY: range = DataRangeY(dataset);
+
+  const dataRange = { x: { duration: dataset.length }, y: DataRangeY(dataset) };
   const modData: { data: candle; posR: position }[] = AddPosR(
     dataset,
-    dataRangeY
+    dataRange.y
   );
-  const offset = 1;
-  const dWidth = dataset.length;
-  const dHeight = dataRangeY.max - dataRangeY.min;
+
+  const offset = 0.8;
+  const dWidth = dataRange.x.duration;
+  const dHeight = dataRange.y.max - dataRange.y.min;
   const aWidth = axisRange.x.duration;
-  const aHeight = yAxis.max - yAxis.min;
+  const aHeight = axisRange.y.max - axisRange.y.min;
   const styleAdjust = {
-    top: -((dataRangeY.max - yAxis.max) / aHeight) * 100 + "%",
+    top: -((dataRange.y.max - axisRange.y.max) / aHeight) * 100 + "%",
     right: (dWidth / aWidth - 1) * offset * 100 + "%",
-    width: (dWidth / (aWidth * (2 - offset))) * 100 + "%",
+    width: (dWidth / aWidth) * offset * 100 + "%",
     height: (dHeight / aHeight) * 100 + "%",
-    transform: `translateX(0px) translateY(0px)`
+    transform: `translateX(0%) translateY(0%)`
   };
 
   return (
